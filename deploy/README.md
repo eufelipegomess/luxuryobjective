@@ -37,7 +37,7 @@ Criar `/var/www/luxuryobjective/.env.production` a partir de `.env.example`.
 Supabase, em *Project Settings → API Keys*.
 
 ```ini
-NEXT_PUBLIC_SITE_URL=https://www.luxuryobjective.com
+NEXT_PUBLIC_SITE_URL=https://luxuryobjective.com
 # `true` enquanto for ambiente de aprovação; `false` no domínio definitivo,
 # senão o site fica invisível no Google.
 NEXT_PUBLIC_NOINDEX=false

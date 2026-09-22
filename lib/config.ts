@@ -4,14 +4,27 @@ export const siteConfig = {
   name: 'Luxury Objective',
   tagline: 'Promotora Imobiliária Integrada',
   locale: 'pt-PT',
-  /** Canonical base. Configurável por ambiente — nunca hardcoded numa página. */
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000').replace(/\/$/, ''),
   /**
-   * Fecha o site aos motores de busca. Ligar em qualquer ambiente que não seja
-   * o domínio definitivo — uma pré-visualização indexada compete com o site
-   * real e é trabalhosa de tirar do índice depois.
+   * Canonical base. Configurável por ambiente — nunca hardcoded numa página.
+   *
+   * Sem variável, o que vale é o ambiente: em produção o domínio definitivo,
+   * em desenvolvimento a máquina local. Antes caía sempre em `localhost:3000`
+   * e um alojamento sem a variável definida publicava canonical, Open Graph e
+   * sitemap a apontar para a máquina de quem fez o build — ninguém repara até
+   * a primeira partilha não mostrar imagem.
    */
-  noindex: process.env.NEXT_PUBLIC_NOINDEX === 'true',
+  url: (
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.NODE_ENV === 'production' ? 'https://luxuryobjective.com' : 'http://localhost:3000')
+  ).replace(/\/$/, ''),
+  /**
+   * Fecha o site aos motores de busca. Fechado por omissão: abre-se de uma vez,
+   * no domínio definitivo e quando o conteúdo estiver aprovado, com
+   * `NEXT_PUBLIC_NOINDEX=false`. Ao contrário — aberto por omissão — bastava
+   * esquecer a variável numa pré-visualização para ela competir com o site
+   * real na pesquisa, e tirar do índice depois dá muito mais trabalho.
+   */
+  noindex: process.env.NEXT_PUBLIC_NOINDEX !== 'false',
   email: 'geral@luxuryobjective.com',
   phones: ['+351912221025', '+351252104920'],
   address: {

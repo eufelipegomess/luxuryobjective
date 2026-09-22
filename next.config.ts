@@ -2,6 +2,12 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  /**
+   * `standalone` empacota o servidor e só as dependências que ele usa — é o
+   * formato para correr o site num servidor próprio (VPS). Fica atrás de uma
+   * variável para não mudar o build da Netlify, que traz o seu próprio adaptador.
+   */
+  ...(process.env.NEXT_OUTPUT === 'standalone' ? { output: 'standalone' as const } : {}),
   images: {
     formats: ['image/avif', 'image/webp'],
     // 90 para as fotografias (ver lib/images.ts); 75 é o valor por omissão.
@@ -30,6 +36,12 @@ const nextConfig: NextConfig = {
       {
         source: '/admin/:path*',
         headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
+        // O vídeo e as imagens da hero não mudam de nome: cache longa. Vive
+        // aqui, e não só no netlify.toml, para valer em qualquer servidor.
+        source: '/media/:path*',
+        headers: [{ key: 'Cache-Control', value: 'public, max-age=31536000, immutable' }],
       },
     ]
   },

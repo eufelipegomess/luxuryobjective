@@ -1,0 +1,44 @@
+# Nginx à frente do Next.js. Trocar o domínio nas duas linhas `server_name`.
+# O certbot acrescenta sozinho a parte do HTTPS quando correr.
+
+server {
+    listen 80;
+    server_name luxuryobjective.com www.luxuryobjective.com;
+
+    # Os uploads do painel passam por aqui (o limite do Next é de 10 MB).
+    client_max_body_size 20m;
+
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml;
+    gzip_min_length 1024;
+
+    # Ficheiros com nome fixo e conteúdo imutável: cache longa, servida pelo
+    # nginx sem incomodar o Node.
+    location /_next/static/ {
+        alias /var/www/luxuryobjective/.next/standalone/.next/static/;
+        access_log off;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    # Vídeo e imagens da hero. `bytes` é o que permite ao browser saltar para
+    # um instante do vídeo sem esperar pelo ficheiro todo — sem isto, o vídeo
+    # conduzido pelo scroll engasga.
+    location /media/ {
+        alias /var/www/luxuryobjective/.next/standalone/public/media/;
+        access_log off;
+        add_header Accept-Ranges bytes;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 60s;
+    }
+}

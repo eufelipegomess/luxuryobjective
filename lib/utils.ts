@@ -58,3 +58,18 @@ export function truncate(text: string, max: number): string {
   const lastSpace = cut.lastIndexOf(' ')
   return `${(lastSpace > max * 0.6 ? cut.slice(0, lastSpace) : cut).trimEnd()}…`
 }
+
+/**
+ * Prende a última palavra à anterior com um espaço inquebrável, para o
+ * parágrafo não acabar com uma palavra sozinha numa linha ("viúva").
+ *
+ * É apresentação, não conteúdo: o texto continua igual ao aprovado, e o
+ * espaço inquebrável é na mesma um espaço ao copiar. Complementa o
+ * `text-wrap: pretty` do CSS, que só o Chrome e o Android respeitam — no
+ * Safari do iPhone é isto que faz o trabalho.
+ */
+export function noWidow(text: string): string {
+  const i = text.trimEnd().lastIndexOf(' ')
+  if (i < 0) return text
+  return `${text.slice(0, i)} ${text.slice(i + 1)}`
+}

@@ -5,7 +5,7 @@ import { Lideranca } from '@/components/sections/Lideranca'
 import { ValoresMarquee } from '@/components/sections/ValoresMarquee'
 import { IconMissao, IconValores, IconVisao } from '@/components/ui/Icons'
 import { empresa, home, nav } from '@/content/pt-PT'
-import { truncate } from '@/lib/utils'
+import { noWidow, truncate } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: nav.empresa,
@@ -53,7 +53,7 @@ function MissaoVisaoValores() {
           <IconMissao className="h-11 w-11 text-gold" />
           <h3 className="mt-6 text-eyebrow text-gold">{mvv.missaoLabel}</h3>
           <p data-reveal className="measure mt-5 leading-relaxed text-bone-muted">
-            {mvv.missao}
+            {noWidow(mvv.missao)}
           </p>
         </article>
 
@@ -61,7 +61,7 @@ function MissaoVisaoValores() {
           <IconVisao className="h-11 w-11 text-gold" />
           <h3 className="mt-6 text-eyebrow text-gold">{mvv.visaoLabel}</h3>
           <p data-reveal className="measure mt-5 leading-relaxed text-bone-muted">
-            {mvv.visao}
+            {noWidow(mvv.visao)}
           </p>
         </article>
       </div>

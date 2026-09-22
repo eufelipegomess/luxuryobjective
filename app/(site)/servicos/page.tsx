@@ -6,7 +6,7 @@ import { OrcamentosOportunidades } from '@/components/sections/OrcamentosOportun
 import { media, type MediaRef } from '@/lib/media'
 import { routes } from '@/lib/config'
 import { nav, servicos } from '@/content/pt-PT'
-import { truncate } from '@/lib/utils'
+import { noWidow, truncate } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: nav.servicos,
@@ -101,7 +101,7 @@ function AreaBlock({
                   : 'measure mt-8 leading-relaxed text-bone-muted'
               }
             >
-              {body}
+              {noWidow(body)}
             </p>
             <div data-reveal data-delay="0.1" className="mt-12 hidden lg:block">
               <ButtonLink href={href} variant={light ? 'onLight' : 'secondary'} withArrow>

@@ -97,11 +97,17 @@ export function SplitLines({ text, as: Tag = 'span', className, stagger = 0.09, 
     return () => ctx.revert()
   }, [lines, delay, stagger])
 
-  // Nova medição no resize — as quebras mudam com a largura.
+  // Nova medição quando a largura muda — é só dela que dependem as quebras.
   useEffect(() => {
     if (prefersReducedMotion()) return
     let timer: ReturnType<typeof setTimeout>
+    let width = window.innerWidth
     const onResize = () => {
+      // Em mobile, a barra do browser a aparecer e a desaparecer dispara
+      // `resize` com a mesma largura. Remedir aí punha a headline a repetir o
+      // reveal sempre que se subia e descia a página.
+      if (window.innerWidth === width) return
+      width = window.innerWidth
       clearTimeout(timer)
       timer = setTimeout(() => {
         setLines(null)

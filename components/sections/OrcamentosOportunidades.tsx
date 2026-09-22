@@ -5,6 +5,7 @@ import { Selector, SelectorPanel } from '@/components/forms/Selector'
 import { RemodelacaoForm } from '@/components/forms/RemodelacaoForm'
 import { OportunidadeForm } from '@/components/forms/OportunidadeForm'
 import { servicos } from '@/content/pt-PT'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Orçamentos & Oportunidades: primeiro os dois seletores, e só depois o
@@ -21,7 +22,7 @@ export function OrcamentosOportunidades() {
           {orcamentos.title}
         </h2>
         <p data-reveal className="measure mt-8 text-bone-muted">
-          {orcamentos.body}
+          {noWidow(orcamentos.body)}
         </p>
 
         <div className="mt-14 border border-line">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useId, useRef } from 'react'
-import { cn } from '@/lib/utils'
+import { cn, noWidow } from '@/lib/utils'
 
 export type SelectorOption = {
   id: string
@@ -90,7 +90,7 @@ export function Selector({
                 selected ? 'text-ink/70' : 'text-bone-muted',
               )}
             >
-              {option.description}
+              {noWidow(option.description)}
             </span>
           </button>
         )

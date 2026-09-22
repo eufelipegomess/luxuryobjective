@@ -5,6 +5,7 @@ import { media } from '@/lib/media'
 import { empresa } from '@/content/pt-PT'
 import { prefersReducedMotion } from '@/lib/animations/gsap'
 import { useGsapContext } from '@/lib/animations/useGsapContext'
+import { noWidow } from '@/lib/utils'
 
 const portraits = [media.retratoNathalie, media.retratoBruno] as const
 
@@ -168,7 +169,7 @@ export function Lideranca() {
                       data-lideranca-bio
                       className="measure mt-8 text-base leading-relaxed text-ink/75 md:text-[0.9375rem]"
                     >
-                      {person.body}
+                      {noWidow(person.body)}
                     </p>
                   </div>
                 </article>

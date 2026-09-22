@@ -13,7 +13,7 @@ import { CATEGORY_LABELS, STATUS_LABELS } from '@/lib/types'
 import { media } from '@/lib/media'
 import { routes } from '@/lib/config'
 import { home, nav, ui } from '@/content/pt-PT'
-import { compactMeta, truncate } from '@/lib/utils'
+import { compactMeta, noWidow, truncate } from '@/lib/utils'
 
 export const revalidate = 3600
 
@@ -153,7 +153,7 @@ export default async function ProjetoPage({ params }: Props) {
                     data-reveal
                     className="font-[family-name:var(--font-display)] text-[clamp(1.25rem,2.4vw,2rem)] leading-snug text-bone"
                   >
-                    {project.excerpt}
+                    {noWidow(project.excerpt)}
                   </p>
                 ) : null}
 

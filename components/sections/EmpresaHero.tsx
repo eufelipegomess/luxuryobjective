@@ -7,6 +7,7 @@ import { empresa } from '@/content/pt-PT'
 import { prefersReducedMotion } from '@/lib/animations/gsap'
 import { cardInset, insetFromAnchor } from '@/lib/animations/clip'
 import { useGsapContext } from '@/lib/animations/useGsapContext'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Abertura da página Empresa.
@@ -108,7 +109,7 @@ export function EmpresaHero() {
                 data-delay="0.2"
                 className="mt-8 max-w-[46rem] leading-relaxed text-bone-muted"
               >
-                {empresa.quemSomos.body}
+                {noWidow(empresa.quemSomos.body)}
               </p>
             </div>
 

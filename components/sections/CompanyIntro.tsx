@@ -9,6 +9,7 @@ import { home } from '@/content/pt-PT'
 import { prefersReducedMotion } from '@/lib/animations/gsap'
 import { insetFromAnchor, proportionalInset } from '@/lib/animations/clip'
 import { useGsapContext } from '@/lib/animations/useGsapContext'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Apresentação da empresa.
@@ -116,7 +117,7 @@ export function CompanyIntro() {
                         data-delay={0.1 + index * 0.08}
                         className="text-base leading-relaxed text-bone-muted md:text-[0.9375rem]"
                       >
-                        {sentence}
+                        {noWidow(sentence)}
                       </p>
                     ))}
                   </div>

@@ -8,7 +8,7 @@ import { projectSlides } from '@/lib/project-slides'
 import { media } from '@/lib/media'
 import { CATEGORY_LABELS, STATUS_LABELS, type ProjectSummary } from '@/lib/types'
 import { ui } from '@/content/pt-PT'
-import { cn } from '@/lib/utils'
+import { cn, noWidow } from '@/lib/utils'
 
 /**
  * Accordion editorial de grande escala com os projetos publicados.
@@ -124,7 +124,7 @@ export function ProjectAccordion({ projects }: { projects: ProjectSummary[] }) {
                     </dl>
 
                     {project.excerpt ? (
-                      <p className="measure mt-8 text-bone-muted">{project.excerpt}</p>
+                      <p className="measure mt-8 text-bone-muted">{noWidow(project.excerpt)}</p>
                     ) : null}
 
                     <Link

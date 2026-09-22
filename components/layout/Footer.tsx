@@ -37,7 +37,9 @@ export function Footer() {
 
           <nav
             aria-label="Navegação do rodapé"
-            className="col-span-2 md:col-span-4 lg:col-span-3 lg:col-start-6"
+            // Em telemóvel a meia largura deixava a morada e os telefones a
+            // partir em linhas de duas palavras. Cada bloco ocupa a largura toda.
+            className="col-span-4 md:col-span-4 lg:col-span-3 lg:col-start-6"
           >
             <ul className="flex flex-col gap-3">
               {primaryNav.map((item) => (
@@ -53,7 +55,7 @@ export function Footer() {
             </ul>
           </nav>
 
-          <div className="col-span-2 md:col-span-4 lg:col-span-4 lg:col-start-9">
+          <div className="col-span-4 md:col-span-4 lg:col-span-4 lg:col-start-9">
             <address className="flex flex-col gap-3 not-italic text-sm leading-relaxed text-bone-muted">
               <span className="text-bone">{contacto.morada}</span>
               {contacto.telefones.map((phone) => (

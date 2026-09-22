@@ -1,5 +1,5 @@
 import type { ContentBlock } from '@/lib/types'
-import { compactMeta } from '@/lib/utils'
+import { compactMeta, noWidow } from '@/lib/utils'
 
 /**
  * Narrativa do projeto.
@@ -30,7 +30,7 @@ function Block({ block }: { block: ContentBlock }) {
       return <h3 className="text-title text-bone">{block.text}</h3>
 
     case 'paragraph':
-      return <p className="measure leading-relaxed text-bone-muted">{block.text}</p>
+      return <p className="measure leading-relaxed text-bone-muted">{noWidow(block.text)}</p>
 
     case 'quote':
       return (

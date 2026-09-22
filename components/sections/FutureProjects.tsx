@@ -6,6 +6,7 @@ import { SplitLines } from '@/components/motion/SplitLines'
 import { media } from '@/lib/media'
 import { prefersReducedMotion } from '@/lib/animations/gsap'
 import { useGsapContext } from '@/lib/animations/useGsapContext'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Chamada para futuros projetos.
@@ -88,7 +89,7 @@ export function FutureProjects({
                 data-delay="0.15"
                 className="mt-7 max-w-[34rem] leading-relaxed text-bone-muted"
               >
-                {body}
+                {noWidow(body)}
               </p>
 
               <div data-reveal data-delay="0.25" className="mt-12">

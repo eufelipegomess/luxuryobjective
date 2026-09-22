@@ -5,6 +5,7 @@ import { Selector, SelectorPanel } from '@/components/forms/Selector'
 import { ParceriaForm, ProprietarioForm, TerrenoForm } from '@/components/forms/SimpleForms'
 import { SplitLines } from '@/components/motion/SplitLines'
 import { futurosProjetos } from '@/content/pt-PT'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Área de futuros projetos. Vive dentro da página Projetos e serve de destino
@@ -38,7 +39,7 @@ export function FuturosProjetosForms() {
           <SplitLines text={futurosProjetos.title} />
         </h2>
         <p data-reveal data-delay="0.15" className="measure mt-8 text-bone-muted">
-          {futurosProjetos.body}
+          {noWidow(futurosProjetos.body)}
         </p>
 
         <div className="mt-14 border border-line">

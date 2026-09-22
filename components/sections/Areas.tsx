@@ -8,6 +8,7 @@ import { routes } from '@/lib/config'
 import { home } from '@/content/pt-PT'
 import { prefersReducedMotion } from '@/lib/animations/gsap'
 import { useGsapContext } from '@/lib/animations/useGsapContext'
+import { noWidow } from '@/lib/utils'
 
 const panelMedia = [media.areaDesenvolvimento, media.areaRemodelacao] as const
 
@@ -132,7 +133,7 @@ function AreaPanel({
           <div className="col-span-4 md:col-span-8 lg:col-span-6">
             <h3 className="text-headline text-bone">{title}</h3>
             <p data-reveal className="measure mt-6 text-bone-muted">
-              {body}
+              {noWidow(body)}
             </p>
             <div data-reveal data-delay="0.1" className="mt-10 hidden lg:block">
               <ButtonLink href={href} variant={last ? 'primary' : 'secondary'} withArrow>

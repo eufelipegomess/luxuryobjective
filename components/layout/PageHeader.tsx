@@ -1,4 +1,5 @@
 import { SplitLines } from '@/components/motion/SplitLines'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Abertura partilhada por Serviços, Projetos e Contacto.
@@ -27,7 +28,7 @@ export function PageHeader({
 
         <div className="col-span-4 md:col-span-8 lg:col-span-5 lg:col-start-8">
           <p data-reveal data-delay="0.2" className="leading-relaxed text-bone-muted">
-            {body}
+            {noWidow(body)}
           </p>
         </div>
       </div>

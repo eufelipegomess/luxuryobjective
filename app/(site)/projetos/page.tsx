@@ -6,7 +6,7 @@ import { FuturosProjetosForms } from '@/components/sections/FuturosProjetosForms
 import { getPublishedProjects } from '@/lib/queries/projects'
 import { PROJECT_CATEGORIES, type ProjectCategory } from '@/lib/types'
 import { nav, projetos } from '@/content/pt-PT'
-import { truncate } from '@/lib/utils'
+import { noWidow, truncate } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: nav.projetos,
@@ -71,7 +71,7 @@ export default async function ProjetosPage({ searchParams }: Props) {
               {projetos.proximos.title}
             </h2>
             <p data-reveal className="mt-6 text-headline text-bone-muted">
-              {projetos.proximos.body}
+              {noWidow(projetos.proximos.body)}
             </p>
           </div>
         </section>

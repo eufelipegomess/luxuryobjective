@@ -5,6 +5,7 @@ import { projectSlides } from '@/lib/project-slides'
 import { media } from '@/lib/media'
 import { STATUS_LABELS, type ProjectSummary } from '@/lib/types'
 import { ui } from '@/content/pt-PT'
+import { noWidow } from '@/lib/utils'
 
 /**
  * Listagem de projetos.
@@ -81,7 +82,7 @@ function ProjectCard({ project, index }: { project: ProjectSummary; index: numbe
             <p className="text-sm text-bone-muted">{project.location}</p>
           ) : null}
           {project.excerpt ? (
-            <p className="measure text-sm leading-relaxed text-bone-muted">{project.excerpt}</p>
+            <p className="measure text-sm leading-relaxed text-bone-muted">{noWidow(project.excerpt)}</p>
           ) : null}
         </div>
 

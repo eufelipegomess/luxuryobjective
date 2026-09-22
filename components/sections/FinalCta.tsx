@@ -23,7 +23,7 @@ export function FinalCta({
     <section className="border-t border-line bg-ink">
       <div className="shell py-(--spacing-section)">
         <div className="mx-auto flex max-w-[46rem] flex-col items-center text-center">
-          <p className="font-[family-name:var(--font-display)] text-[clamp(1.75rem,3.2vw,2.75rem)] leading-[1.12] tracking-tight text-balance text-bone">
+          <p className="font-[family-name:var(--font-display)] text-[clamp(1.375rem,5.6vw,1.75rem)] md:text-[clamp(1.75rem,3.2vw,2.75rem)] leading-[1.12] tracking-tight text-balance text-bone">
             <SplitLines text={text} />
           </p>
 

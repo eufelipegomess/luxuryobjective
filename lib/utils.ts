@@ -19,11 +19,6 @@ export function slugify(input: string): string {
     .slice(0, 80)
 }
 
-/** Divide um texto em palavras preservando espaços — base do reveal por linha. */
-export function splitWords(text: string): string[] {
-  return text.split(/(\s+)/).filter((part) => part.length > 0)
-}
-
 export function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`
   if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`

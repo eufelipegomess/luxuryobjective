@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { compactMeta, formatBytes, safeFileName, slugify, splitWords, truncate } from '@/lib/utils'
+import { compactMeta, formatBytes, safeFileName, slugify, truncate } from '@/lib/utils'
 import { projectSchema } from '@/lib/validations/project'
 
 describe('slugify', () => {
@@ -46,12 +46,6 @@ describe('compactMeta', () => {
 
   it('mantém números, incluindo zero', () => {
     expect(compactMeta([{ label: 'Unidades', value: 0 }])).toHaveLength(1)
-  })
-})
-
-describe('splitWords', () => {
-  it('preserva os espaços para o reveal por linha', () => {
-    expect(splitWords('Criamos, transformamos e').join('')).toBe('Criamos, transformamos e')
   })
 })
 

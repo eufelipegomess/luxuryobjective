@@ -826,3 +826,38 @@ html.lenis-active body {
     transition: none;
   }
 }
+
+/* `balance` iguala o comprimento das linhas. Num ecrã largo aquilo assenta
+   bem; num telemóvel o texto passa a ocupar metade da largura disponível e a
+   mesma frase cai em cinco linhas curtas em vez de três cheias — o bloco
+   cresce em altura e as quebras parecem arbitrárias, uma palavra por linha.
+   Abaixo dos 768px vale mais encher a linha.
+
+   Fora de qualquer `@layer`, de propósito: dentro de `base` isto perdia para
+   a utility `text-balance`, que vive numa camada acima. */
+@media (max-width: 767px) {
+  h1,
+  h2,
+  h3,
+  h4,
+  .text-balance {
+    /* `wrap` e não `pretty`: o segundo recua palavras para evitar uma última
+       linha curta, e num título de duas linhas isso rouba largura à primeira
+       — «Fale com a / Luxury Objective» em vez de «Fale com a Luxury /
+       Objective». Num ecrã estreito, encher a linha vale mais. */
+    text-wrap: wrap;
+  }
+
+  /* A escala de ecrã largo chega ao telemóvel pelo mínimo do `clamp`, que é
+     fixo em `rem` — 28px de display num ecrã de 390px. A esse tamanho uma
+     palavra como OPORTUNIDADES ocupa dois terços da linha e o parágrafo parte
+     em dez linhas curtas. Aqui a escala volta a depender da largura, e o
+     máximo encontra-se com o valor de 768px para não haver salto no limite. */
+  .text-display {
+    font-size: clamp(1.375rem, 6.2vw, 2rem);
+  }
+
+  .text-title {
+    font-size: clamp(1.125rem, 4.8vw, 1.5rem);
+  }
+}

@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useLayoutEffect, useRef, useState, type ElementType } from 'react'
-import { splitWords } from '@/lib/utils'
 import { prefersReducedMotion, registerGsap } from '@/lib/animations/gsap'
 
 type Props = {
@@ -14,12 +13,58 @@ type Props = {
 }
 
 /**
+ * Onde é que o browser partiu o texto.
+ *
+ * Mede sobre o próprio nó de texto, com um `Range` por palavra, e agrupa pelas
+ * palavras que partilham a mesma linha. É a única forma de obter as quebras
+ * reais: medir num DOM alternativo — palavras em `inline-block`, por exemplo —
+ * dá outro resultado, porque `text-wrap: balance` nos títulos trata caixas e
+ * texto corrido de maneira diferente. Essa diferença punha o Safari do
+ * telemóvel a devolver linhas de uma palavra só.
+ */
+function medirLinhas(node: HTMLElement): string[] {
+  const texto = node.firstChild
+  if (!texto || texto.nodeType !== Node.TEXT_NODE) return []
+
+  const conteudo = (texto as Text).data
+  const range = document.createRange()
+  const linhas: string[] = []
+  const palavra = /\S+/g
+
+  let topoAtual: number | null = null
+  let buffer = ''
+  let match: RegExpExecArray | null
+
+  while ((match = palavra.exec(conteudo)) !== null) {
+    range.setStart(texto, match.index)
+    range.setEnd(texto, match.index + match[0].length)
+
+    // Uma palavra pode ocupar dois retângulos se for partida ao meio; o que
+    // decide a que linha pertence é onde começa.
+    const rect = range.getClientRects()[0]
+    if (!rect) continue
+
+    const topo = Math.round(rect.top)
+    if (topoAtual === null) topoAtual = topo
+    if (topo !== topoAtual) {
+      if (buffer.trim()) linhas.push(buffer.trim())
+      buffer = ''
+      topoAtual = topo
+    }
+    buffer += `${match[0]} `
+  }
+  if (buffer.trim()) linhas.push(buffer.trim())
+
+  return linhas
+}
+
+/**
  * Split por linha sem plugins pagos.
  *
  * Renderiza no servidor como texto corrido — o conteúdo é sempre legível e
  * selecionável, e o leitor de ecrã lê a frase inteira de uma vez. Só depois de
- * montado é que mede as quebras reais e reagrupa em linhas mascaradas para o
- * reveal. Ao redimensionar, volta a medir.
+ * montado, e de as fontes estarem carregadas, é que mede as quebras reais e
+ * reagrupa em linhas mascaradas para o reveal. Ao redimensionar, volta a medir.
  *
  * A animação das linhas é feita aqui, e não pelo `RevealController`: só este
  * componente sabe quando é que as linhas existem. Deixar o controlador global
@@ -29,45 +74,41 @@ type Props = {
 export function SplitLines({ text, as: Tag = 'span', className, stagger = 0.09, delay = 0 }: Props) {
   const ref = useRef<HTMLElement>(null)
   const [lines, setLines] = useState<string[] | null>(null)
-  const [measuring, setMeasuring] = useState(false)
 
+  // Fase de medição. O DOM medido é exatamente o que o servidor enviou: texto
+  // corrido, sem embrulhos. Esperar pelas fontes evita congelar as quebras da
+  // fonte de recurso, que tem outra largura.
   useLayoutEffect(() => {
-    if (prefersReducedMotion()) return
-    setMeasuring(true)
-  }, [])
-
-  // Fase de medição: palavras soltas, agrupadas depois por posição vertical.
-  useLayoutEffect(() => {
-    if (!measuring) return
+    if (prefersReducedMotion() || lines) return
     const node = ref.current
     if (!node) return
 
-    const frame = requestAnimationFrame(() => {
-      const words = Array.from(node.querySelectorAll<HTMLElement>('[data-word]'))
-      if (words.length === 0) return
+    let cancelado = false
+    let frame = 0
 
-      const grouped: string[] = []
-      let currentTop: number | null = null
-      let buffer = ''
+    const medir = () => {
+      if (cancelado) return
+      const node = ref.current
+      if (!node) return
+      const medidas = medirLinhas(node)
+      if (medidas.length > 0) setLines(medidas)
+    }
 
-      for (const word of words) {
-        const top = Math.round(word.offsetTop)
-        if (currentTop === null) currentTop = top
-        if (top !== currentTop) {
-          grouped.push(buffer.trim())
-          buffer = ''
-          currentTop = top
-        }
-        buffer += `${word.textContent ?? ''} `
-      }
-      if (buffer.trim()) grouped.push(buffer.trim())
+    const agendar = () => {
+      frame = requestAnimationFrame(medir)
+    }
 
-      setLines(grouped)
-      setMeasuring(false)
-    })
+    if (document.fonts && document.fonts.status !== 'loaded') {
+      document.fonts.ready.then(agendar)
+    } else {
+      agendar()
+    }
 
-    return () => cancelAnimationFrame(frame)
-  }, [measuring, text])
+    return () => {
+      cancelado = true
+      cancelAnimationFrame(frame)
+    }
+  }, [lines, text])
 
   // Anima as linhas assim que existem.
   useLayoutEffect(() => {
@@ -109,10 +150,7 @@ export function SplitLines({ text, as: Tag = 'span', className, stagger = 0.09, 
       if (window.innerWidth === width) return
       width = window.innerWidth
       clearTimeout(timer)
-      timer = setTimeout(() => {
-        setLines(null)
-        setMeasuring(true)
-      }, 180)
+      timer = setTimeout(() => setLines(null), 180)
     }
     window.addEventListener('resize', onResize)
     return () => {
@@ -121,26 +159,12 @@ export function SplitLines({ text, as: Tag = 'span', className, stagger = 0.09, 
     }
   }, [])
 
-  if (measuring) {
+  if (!lines) {
     return (
       <Tag ref={ref} className={className}>
-        {splitWords(text).map((part, i) =>
-          part.trim() === '' ? (
-            // O espaço tem de vir de uma expressão: o JSX descarta filhos que
-            // sejam só whitespace, e o texto ficaria todo colado.
-            <span key={i}>{part}</span>
-          ) : (
-            <span key={i} data-word className="inline-block">
-              {part}
-            </span>
-          ),
-        )}
+        {text}
       </Tag>
     )
-  }
-
-  if (!lines) {
-    return <Tag className={className}>{text}</Tag>
   }
 
   return (

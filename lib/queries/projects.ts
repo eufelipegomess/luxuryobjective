@@ -102,12 +102,27 @@ function mapSummaryRow(row: SummaryRow): ProjectSummary {
 }
 
 /**
+ * A base de dados não respondeu — rede, manutenção, ou um projeto gratuito do
+ * Supabase suspenso por inatividade. Em vez de deixar a página vazia, o site
+ * serve o conjunto local (`fallback.ts`), que é o mesmo conteúdo do seed e é
+ * mantido em sintonia com ele. Fica registado no log do servidor: uma página
+ * certa com dados de reserva não pode passar por normal.
+ */
+function comFalha<T>(onde: string, motivo: string, alternativa: T): T {
+  console.error(`[projects] ${onde}: ${motivo} — a servir o conjunto local`)
+  return alternativa
+}
+
+/**
  * Projetos publicados. A RLS já filtra `published`/`archived`, mas o filtro
  * explícito mantém a intenção legível e protege caso a política mude.
  */
 export async function getPublishedProjects(
   category?: ProjectCategory,
 ): Promise<ProjectSummary[]> {
+  const locais = () =>
+    category ? fallbackSummaries().filter((p) => p.category === category) : fallbackSummaries()
+
   if (!isSupabaseConfigured()) {
     const all = isDevStoreEnabled()
       ? (await devListPublished()).map(toSummary)
@@ -115,27 +130,29 @@ export async function getPublishedProjects(
     return category ? all.filter((p) => p.category === category) : all
   }
 
-  const supabase = createSupabasePublicClient()
-  let query = supabase
-    .from('projects')
-    .select(SUMMARY_COLUMNS)
-    .eq('published', true)
-    .eq('archived', false)
-    .order('display_order', { ascending: true })
-    .order('created_at', { ascending: false })
+  try {
+    const supabase = createSupabasePublicClient()
+    let query = supabase
+      .from('projects')
+      .select(SUMMARY_COLUMNS)
+      .eq('published', true)
+      .eq('archived', false)
+      .order('display_order', { ascending: true })
+      .order('created_at', { ascending: false })
 
-  if (category) query = query.eq('category', category)
+    if (category) query = query.eq('category', category)
 
-  const { data, error } = await query
-  if (error) {
-    console.error('[projects] getPublishedProjects', error.message)
-    return []
+    const { data, error } = await query
+    if (error) return comFalha('getPublishedProjects', error.message, locais())
+
+    return ((data as SummaryRow[] | null) ?? []).map(mapSummaryRow)
+  } catch (erro) {
+    return comFalha('getPublishedProjects', String(erro), locais())
   }
-
-  return ((data as SummaryRow[] | null) ?? []).map(mapSummaryRow)
 }
-
 export async function getFeaturedProjects(): Promise<ProjectSummary[]> {
+  const locais = () => fallbackSummaries().filter((p) => p.featured)
+
   if (!isSupabaseConfigured()) {
     const all = isDevStoreEnabled()
       ? (await devListPublished()).map(toSummary)
@@ -143,75 +160,79 @@ export async function getFeaturedProjects(): Promise<ProjectSummary[]> {
     return all.filter((p) => p.featured)
   }
 
-  const supabase = createSupabasePublicClient()
-  const { data, error } = await supabase
-    .from('projects')
-    .select(SUMMARY_COLUMNS)
-    .eq('published', true)
-    .eq('archived', false)
-    .eq('featured', true)
-    .order('display_order', { ascending: true })
+  try {
+    const supabase = createSupabasePublicClient()
+    const { data, error } = await supabase
+      .from('projects')
+      .select(SUMMARY_COLUMNS)
+      .eq('published', true)
+      .eq('archived', false)
+      .eq('featured', true)
+      .order('display_order', { ascending: true })
 
-  if (error) {
-    console.error('[projects] getFeaturedProjects', error.message)
-    return []
+    if (error) return comFalha('getFeaturedProjects', error.message, locais())
+
+    return ((data as SummaryRow[] | null) ?? []).map(mapSummaryRow)
+  } catch (erro) {
+    return comFalha('getFeaturedProjects', String(erro), locais())
   }
-
-  return ((data as SummaryRow[] | null) ?? []).map(mapSummaryRow)
 }
-
 export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const local = () => fallbackProjects.find((p) => p.slug === slug) ?? null
+
   if (!isSupabaseConfigured()) {
     if (isDevStoreEnabled()) {
       const project = await devGetBySlug(slug)
       return project && project.published && !project.archived ? project : null
     }
-    return fallbackProjects.find((p) => p.slug === slug) ?? null
+    return local()
   }
 
-  const supabase = createSupabasePublicClient()
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*, project_media(*)')
-    .eq('slug', slug)
-    .eq('published', true)
-    .eq('archived', false)
-    .maybeSingle()
+  try {
+    const supabase = createSupabasePublicClient()
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*, project_media(*)')
+      .eq('slug', slug)
+      .eq('published', true)
+      .eq('archived', false)
+      .maybeSingle()
 
-  if (error) {
-    console.error('[projects] getProjectBySlug', error.message)
-    return null
-  }
-  if (!data) return null
+    if (error) return comFalha('getProjectBySlug', error.message, local())
+    // Sem erro e sem linha: o projeto não existe mesmo. Aqui é 404, não falha.
+    if (!data) return null
 
-  const { project_media: mediaRows, ...row } = data as ProjectRow & {
-    project_media: ProjectMediaRow[] | null
+    const { project_media: mediaRows, ...row } = data as ProjectRow & {
+      project_media: ProjectMediaRow[] | null
+    }
+    return mapProject(row, mediaRows ?? [])
+  } catch (erro) {
+    return comFalha('getProjectBySlug', String(erro), local())
   }
-  return mapProject(row, mediaRows ?? [])
 }
-
-/** Slugs para `generateStaticParams` e para o sitemap. */
 export async function getPublishedSlugs(): Promise<{ slug: string; updatedAt: string }[]> {
+  const locais = () => fallbackProjects.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt }))
+
   if (!isSupabaseConfigured()) {
     const all = isDevStoreEnabled() ? await devListPublished() : fallbackProjects
     return all.map((p) => ({ slug: p.slug, updatedAt: p.updatedAt }))
   }
 
-  const supabase = createSupabasePublicClient()
-  const { data, error } = await supabase
-    .from('projects')
-    .select('slug, updated_at')
-    .eq('published', true)
-    .eq('archived', false)
+  try {
+    const supabase = createSupabasePublicClient()
+    const { data, error } = await supabase
+      .from('projects')
+      .select('slug, updated_at')
+      .eq('published', true)
+      .eq('archived', false)
 
-  if (error) {
-    console.error('[projects] getPublishedSlugs', error.message)
-    return []
+    if (error) return comFalha('getPublishedSlugs', error.message, locais())
+
+    return (data ?? []).map((row) => ({ slug: row.slug, updatedAt: row.updated_at }))
+  } catch (erro) {
+    return comFalha('getPublishedSlugs', String(erro), locais())
   }
-
-  return (data ?? []).map((row) => ({ slug: row.slug, updatedAt: row.updated_at }))
 }
-
 export async function getRelatedProjects(
   project: Pick<Project, 'id' | 'category'>,
   limit = 2,

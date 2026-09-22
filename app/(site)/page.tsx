@@ -1,0 +1,50 @@
+import type { Metadata } from 'next'
+import { Hero } from '@/components/sections/Hero'
+import { CompanyIntro } from '@/components/sections/CompanyIntro'
+import { Areas } from '@/components/sections/Areas'
+import { Stats } from '@/components/sections/Stats'
+import { FutureProjects } from '@/components/sections/FutureProjects'
+import { FinalCta } from '@/components/sections/FinalCta'
+import { ProjectAccordion } from '@/components/projects/ProjectAccordion'
+import { getFeaturedProjects } from '@/lib/queries/projects'
+import { routes } from '@/lib/config'
+import { home } from '@/content/pt-PT'
+
+export const metadata: Metadata = {
+  title: 'Luxury Objective — Promotora Imobiliária Integrada',
+  description: home.hero.subtitle,
+  alternates: { canonical: '/' },
+  openGraph: { title: 'Luxury Objective', description: home.hero.subtitle, url: '/' },
+}
+
+// Os projetos vêm do painel; uma hora de cache chega para o ritmo de publicação.
+export const revalidate = 3600
+
+export default async function HomePage() {
+  const featured = await getFeaturedProjects()
+
+  return (
+    <>
+      <Hero />
+      <CompanyIntro />
+      <Areas />
+      <Stats />
+
+      {/* Projetos dinâmicos: sem frase institucional inventada à volta —
+          apenas os dados publicados no painel. */}
+      {featured.length > 0 ? (
+        <section className="shell pb-(--spacing-section)" aria-label="Projetos">
+          <ProjectAccordion projects={featured} />
+        </section>
+      ) : null}
+
+      <FutureProjects
+        title={home.futuros.title}
+        body={home.futuros.body}
+        cta={home.futuros.cta}
+        href={routes.futurosProjetosParceria}
+      />
+      <FinalCta text={home.chamadaFinal.body} cta={home.chamadaFinal.cta} />
+    </>
+  )
+}

@@ -1,0 +1,33 @@
+# Configuração de deploy — Luxury Objective
+#
+# O site é Next.js com App Router e rotas dinâmicas (projetos, formulários,
+# painel), por isso precisa do runtime de Next da Netlify e não de um export
+# estático.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Nota: a Netlify injecta no <head> as <meta> `hosting-provider` e
+# `netlify-deploy`, que o servidor de Next nunca renderizou. Isso faz a
+# hidratação do React falhar, e a recuperação apaga as flags de movimento do
+# <html>. `[build.processing] skip_processing` NÃO trava a injeção — ela é feita
+# no CDN, não no build — e desligaria também os pretty URLs, por isso não está
+# aqui. A defesa vive em `lib/animations/flags.ts`.
+
+[build.environment]
+  # Next 15 corre em Node 18.18+; 22 é o LTS atual da Netlify.
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# O X-Robots-Tag do painel está em next.config.ts, não aqui: as regras de header
+# da Netlify não chegam às respostas do runtime do Next, e todas as páginas de
+# /admin passam por lá.
+
+# O vídeo e o poster da hero não mudam de nome: podem ficar em cache longa.
+[[headers]]
+  for = "/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"

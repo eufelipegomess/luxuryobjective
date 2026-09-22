@@ -1,0 +1,23 @@
+node_modules/
+.next/
+out/
+build/
+.env
+.env.local
+.env*.local
+*.tsbuildinfo
+next-env.d.ts
+playwright-report/
+test-results/
+.DS_Store
+
+# Armazenamento local do painel em desenvolvimento
+.data/
+public/uploads/
+
+# Local Netlify folder
+.netlify
+
+# Documentos do cliente e briefing interno: ficam na pasta local, fora do GitHub.
+Luxury Objective-Copy Institucional v5.pdf
+prompt-claude-code-luxury-objective.md

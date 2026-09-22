@@ -1,0 +1,828 @@
+@import 'tailwindcss';
+
+/* ---------------------------------------------------------------------------
+   Design tokens — Luxury Objective
+   Base cromática fechada: #0E0E0E / #F8F8F8 / #E7CB43 + neutros derivados.
+   Nenhuma outra cor de destaque é permitida.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-ink: #0e0e0e;
+  --color-ink-raised: #151515;
+  --color-ink-elevated: #1b1b1b;
+  --color-bone: #f8f8f8;
+  --color-bone-muted: #b8b8b2;
+  --color-gold: #e7cb43;
+  --color-gold-dim: #c4ab33;
+
+  --color-line: rgb(248 248 248 / 0.14);
+  --color-line-strong: rgb(248 248 248 / 0.28);
+  --color-line-ink: rgb(14 14 14 / 0.14);
+
+  --font-display: var(--font-fahkwang), 'Times New Roman', serif;
+  --font-sans: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+
+  /* Gutter fluido: 24px mobile → 40px tablet → 64–80px desktop amplo */
+  --spacing-gutter: clamp(1.5rem, 4.5vw, 5rem);
+  /* Ritmo vertical entre blocos: 72–112px mobile → 96–180px desktop */
+  --spacing-section: clamp(4.5rem, 10vw, 11.25rem);
+  --spacing-section-tight: clamp(3.5rem, 7vw, 7rem);
+
+  --container-shell: 1600px;
+  --container-measure: 68ch;
+
+  --ease-lux: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+--------------------------------------------------------------------------- */
+
+@layer base {
+  * {
+    min-width: 0;
+  }
+
+  html {
+    background-color: var(--color-ink);
+    color-scheme: dark;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Sem `scroll-behavior: smooth` global: transformava toda a rolagem
+     programatica numa animacao — incluindo o salto para o topo ao mudar de
+     rota — e, em touch, deixava o alvo a mover-se debaixo do dedo. As ancoras
+     internas compensam o header fixo com `scroll-mt-*`. */
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    font-weight: 300;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Guarda dura contra scroll horizontal acidental em qualquer breakpoint. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 300;
+    line-height: 1.04;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-gold);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-ink);
+  }
+
+  /* Inputs: nunca abaixo de 16px, senão o iOS faz zoom ao focar. */
+  input,
+  textarea,
+  select,
+  button {
+    font: inherit;
+    font-size: max(1rem, 16px);
+    color: inherit;
+  }
+
+  img,
+  video {
+    display: block;
+    max-width: 100%;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilitários de layout — grid editorial 12 colunas
+--------------------------------------------------------------------------- */
+
+@utility shell {
+  width: 100%;
+  max-width: var(--container-shell);
+  margin-inline: auto;
+  padding-inline: var(--spacing-gutter);
+}
+
+@utility grid-editorial {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: clamp(1rem, 2vw, 2rem);
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+@utility measure {
+  max-width: var(--container-measure);
+}
+
+/* Escala tipográfica */
+@utility text-display {
+  font-family: var(--font-display);
+  /* Escala contida: a 7vw a headline da hero partia palavras longas
+     (TRANSFORMAMOS) em ecrãs de 390px e enchia seis linhas em desktop. */
+  font-size: clamp(1.75rem, 4.2vw, 4.25rem);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+
+@utility text-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -0.018em;
+}
+
+@utility text-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.6vw, 2.25rem);
+  line-height: 1.14;
+  letter-spacing: -0.012em;
+}
+
+@utility text-eyebrow {
+  font-size: clamp(0.6875rem, 0.85vw, 0.8125rem);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+@utility text-nav {
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-weight: 300;
+  line-height: 1;
+}
+
+/* Superfície clara (alternância escuro/claro do ritmo narrativo) */
+@utility surface-light {
+  background-color: var(--color-bone);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Motion primitives
+   O estado inicial só é aplicado quando o JS assume o controlo (html[data-motion]),
+   para que o conteúdo continue visível se o JavaScript falhar.
+--------------------------------------------------------------------------- */
+
+@layer components {
+  [data-motion] [data-reveal] {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+    will-change: transform, opacity;
+  }
+
+  [data-motion] [data-reveal-line] > span > span {
+    display: inline-block;
+    transform: translate3d(0, 105%, 0);
+    will-change: transform;
+  }
+
+  [data-reveal-line] > span {
+    display: block;
+    overflow: hidden;
+    /* Folga para descendentes e para a cedilha de Ç em caixa alta: sem ela a
+       máscara de linha corta o glifo. */
+    padding-bottom: 0.16em;
+    margin-bottom: -0.16em;
+  }
+
+  [data-motion] [data-reveal-media] {
+    clip-path: inset(0 0 100% 0);
+    will-change: clip-path;
+  }
+}
+
+/* Reduced motion: sem scrub, sem pins longos, sem parallax. */
+@media (prefers-reduced-motion: reduce) {
+  [data-motion] [data-reveal],
+  [data-motion] [data-reveal-line] > span > span,
+  [data-motion] [data-reveal-media] {
+    opacity: 1 !important;
+    transform: none !important;
+    clip-path: none !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Lenis */
+html.lenis-active,
+html.lenis-active body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------------------------
+   As nossas áreas de atuação — sobreposição dos dois painéis.
+
+   Só entra quando o JavaScript assume o movimento (`[data-motion]`), porque é a
+   máscara com scrub que revela o segundo painel. Sem JS, ou em reduced motion,
+   os painéis ficam empilhados em fluxo: caso contrário o segundo tapava o
+   primeiro e o Desenvolvimento Imobiliário deixava de estar acessível.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  [data-motion] [data-areas-stack] {
+    height: 100svh;
+    overflow: hidden;
+  }
+
+  [data-motion] [data-areas-head] {
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    z-index: 20;
+    /* Folga para a barra compacta do header, que fica por cima do painel. */
+    padding-top: 7rem;
+  }
+
+  [data-motion] [data-areas-progress] {
+    display: block;
+  }
+
+  [data-motion] [data-areas-panel] {
+    position: absolute;
+    inset: 0;
+    margin-top: 0;
+  }
+
+  [data-motion] [data-areas-panel]:first-of-type {
+    z-index: 0;
+  }
+
+  [data-motion] [data-areas-panel]:last-of-type {
+    z-index: 10;
+  }
+
+  [data-motion] [data-areas-bg] {
+    display: block;
+  }
+
+  [data-motion] [data-areas-inline] {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Faixa de valores — sem deslize em reduced motion.
+   O DOM é o mesmo no servidor e no cliente; é aqui que a faixa deixa de ser
+   faixa e passa a lista com quebra de linha.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-marquee] {
+    margin-inline: 0;
+  }
+
+  [data-marquee-track] {
+    width: 100%;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+    transform: none !important;
+  }
+
+  [data-marquee-copy='1'],
+  [data-marquee-fade] {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   A nossa liderança — secção que abre de baixo para cima.
+
+   Só com JavaScript de movimento e a partir de lg. Sem isso, a superfície clara
+   está sempre visível e o título e os dois perfis ficam em fluxo normal.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  [data-motion] [data-lideranca-viewport] {
+    position: relative;
+    height: 100svh;
+  }
+
+  /* O palco já tem 100svh: manter o espaçamento da secção empurrava o conteúdo
+     para fora e o retrato ficava cortado. */
+  [data-motion] [data-lideranca-inner] {
+    position: absolute;
+    inset: 0;
+    padding-block: 0;
+  }
+
+  /* O contentor centra; o GSAP transforma o título lá dentro. Separá-los evita
+     que o `translate(-50%)` do centramento e o `scale`/`y` da animação se
+     sobreponham no mesmo `transform`. */
+  [data-motion] [data-lideranca-title-wrap] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--spacing-gutter);
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  [data-motion] [data-lideranca-title] {
+    /* Escala de entrada: grande e ao centro, antes de encolher para o topo. */
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    text-align: center;
+    color: var(--color-ink);
+    will-change: transform, opacity;
+  }
+
+  [data-motion] [data-lideranca-people] {
+    position: absolute;
+    inset-block: 0;
+    left: 50%;
+    width: 100%;
+    max-width: var(--container-shell);
+    transform: translateX(-50%);
+    margin-top: 0;
+    display: block;
+  }
+
+  /* Cada perfil ocupa o palco todo e centra-se nele: em fluxo normal o conteúdo
+     caía por baixo da dobra.
+     O gutter vive aqui e não no contentor: `inset: 0` resolve contra a *padding
+     box* do ancestral, ou seja, ignorava a margem lateral e o retrato sangrava
+     para fora do ecrã. */
+  [data-motion] [data-lideranca-person] {
+    position: absolute;
+    inset: 0;
+    align-content: center;
+    padding-inline: var(--spacing-gutter);
+    padding-top: 6vh;
+    will-change: transform, opacity;
+  }
+
+  /* O retrato tem de caber no palco: no seu aspect ratio natural passava a
+     dobra. `!important` é necessário porque o MediaSlot define o rácio inline. */
+  [data-motion] [data-lideranca-portrait] > div {
+    aspect-ratio: auto !important;
+    height: min(52vh, 440px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   A nossa liderança em mobile — a mesma sequência do desktop, sem pin.
+
+   O palco estica-se para dar percurso ao scroll e a viewport fica colada ao
+   topo (`sticky`); a timeline corre sobre esse percurso. Sticky e não o pin do
+   ScrollTrigger: no iOS o pin salta quando a barra do browser encolhe.
+
+   Cada perfil é mais alto do que o ecrã — o retrato vai em 4:5 à largura do
+   texto, para a fotografia aparecer quase inteira — e desliza dentro do palco:
+   entra com a fotografia e o nome, sobe até mostrar a biografia e só então dá
+   lugar ao seguinte (Lideranca.tsx). Uma máscara esbate o que passa por baixo
+   do título encolhido.
+   Abaixo de 480px de altura (telemóvel deitado) a secção fica em fluxo normal.
+--------------------------------------------------------------------------- */
+
+@media (max-width: 1023px) and (min-height: 481px) {
+  [data-motion] [data-lideranca-stage] {
+    height: 620svh;
+  }
+
+  [data-motion] [data-lideranca-viewport] {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    overflow: clip;
+  }
+
+  [data-motion] [data-lideranca-inner] {
+    position: absolute;
+    inset: 0;
+    padding-block: 0;
+  }
+
+  [data-motion] [data-lideranca-title-wrap] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline: var(--spacing-gutter);
+    pointer-events: none;
+    z-index: 20;
+  }
+
+  [data-motion] [data-lideranca-title] {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 11vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-transform: none;
+    text-align: center;
+    color: var(--color-ink);
+    will-change: transform, opacity;
+  }
+
+  /* O que sobe passa por baixo do título encolhido e esbate-se, em vez de o
+     atravessar. */
+  [data-motion] [data-lideranca-people] {
+    position: absolute;
+    inset: 0;
+    margin-top: 0;
+    display: block;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 16svh, #000 23svh);
+    mask-image: linear-gradient(to bottom, transparent 16svh, #000 23svh);
+  }
+
+  /* Cada perfil começa por baixo do título e continua para lá do ecrã; a
+     timeline fá-lo subir. Flex em vez da grelha: as colunas do desktop não têm
+     sentido num ecrã estreito. O artigo traz `items-center` da grelha, que em
+     coluna encolhia o retrato — daí o `stretch`. */
+  [data-motion] [data-lideranca-person] {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 1.5rem;
+    padding-inline: var(--spacing-gutter);
+    padding-top: 23svh;
+    padding-bottom: 8svh;
+    will-change: transform, opacity;
+  }
+
+  /* Retrato em 4:5 à largura do texto; em tablet fica limitado para não ocupar
+     o ecrã inteiro. `!important` porque o MediaSlot define o rácio inline. */
+  [data-motion] [data-lideranca-portrait] > div {
+    aspect-ratio: 4 / 5 !important;
+    width: 100%;
+    max-width: 26rem;
+    height: auto;
+  }
+
+  [data-motion] [data-lideranca-bio] {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Faixa de valores — sem deslize em reduced motion.
+   O DOM é o mesmo no servidor e no cliente; é aqui que a faixa deixa de ser
+   faixa e passa a lista com quebra de linha.
+--------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  [data-marquee] {
+    margin-inline: 0;
+  }
+
+  [data-marquee-track] {
+    width: 100%;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+    transform: none !important;
+  }
+
+  [data-marquee-copy='1'],
+  [data-marquee-fade] {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Apresentação da empresa — imagem que abre para a esquerda.
+
+   Em modo de movimento a mídia sai do fluxo e passa a cobrir o palco inteiro,
+   recortada pelo `clip-path` que parte da âncora. Sem JavaScript, em reduced
+   motion ou em mobile, fica na coluna onde a grelha a colocou.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  /* Sem `sticky`: quem fixa o palco é o `pin` do ScrollTrigger, e as duas
+     técnicas em simultâneo entram em conflito. */
+  [data-motion] [data-intro-viewport] {
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  /* O palco já tem 100svh e centra o conteúdo: manter o espaçamento vertical
+     da secção fazia o bloco passar da altura e ser cortado pelo overflow. */
+  [data-motion] [data-intro-inner] {
+    padding-block: 0;
+  }
+
+  [data-motion] [data-intro-media] {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    height: auto;
+    width: auto;
+  }
+
+  [data-motion] [data-intro-media] > div {
+    height: 100%;
+    min-height: 0;
+  }
+
+  /* O texto fica por cima da mídia enquanto se retira. */
+  [data-motion] [data-intro-text] {
+    position: relative;
+    z-index: 10;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Empresa — abertura com imagem a abrir pelos lados.
+   Mesma mecânica da apresentação na Home: a mídia sai do fluxo, cobre o palco e
+   é recortada a partir da âncora. Em fluxo fica no lugar onde a grelha a pôs.
+--------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  [data-motion] [data-empresa-viewport] {
+    height: 100svh;
+    display: flex;
+    align-items: center;
+  }
+
+  [data-motion] [data-empresa-inner] {
+    padding-block: 0;
+    width: 100%;
+  }
+
+  [data-motion] [data-empresa-anchor] {
+    /* Banda central: é daqui que a imagem abre para os dois lados. */
+    height: 42svh;
+    margin-top: 3rem;
+  }
+
+  [data-motion] [data-empresa-media] {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  [data-motion] [data-empresa-media] > div {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Apresentação e Empresa em mobile — imagens que abrem até às bordas.
+
+   Nas duas a mídia sai da coluna e ganha a largura do ecrã, e o `clip-path`
+   parte das margens da página. O recorte inicial também está aqui, para a
+   imagem não aparecer inteira no instante antes de o JavaScript a assumir.
+
+   Empresa: abre de cartão para ecrã inteiro e fica colada ao topo (`sticky`)
+   um instante, enquanto a âncora, mais alta que o ecrã, passa.
+
+   Apresentação: fica no rácio da própria fotografia (16:9), sem ecrã inteiro.
+   Uma fotografia horizontal esticada à altura de um ecrã vertical mostrava só
+   um terço da imagem, ampliado quase três vezes — perdia a nitidez. Assim é
+   servida à resolução certa e abre, proporcional, das margens até às bordas.
+--------------------------------------------------------------------------- */
+
+@media (max-width: 1023px) {
+  /* `clip` e não `hidden`: com `hidden` o contentor passa a ser o de scroll do
+     sticky, e a imagem da Empresa deixava de colar ao ecrã. */
+  [data-motion] [data-intro-viewport],
+  [data-motion] [data-empresa-viewport] {
+    overflow: clip;
+  }
+
+  [data-motion] [data-intro-anchor],
+  [data-motion] [data-empresa-anchor] {
+    width: auto;
+    max-width: none;
+    margin-inline: calc(-1 * var(--spacing-gutter));
+  }
+
+  [data-motion] [data-empresa-anchor] {
+    height: 150svh;
+  }
+
+  [data-motion] [data-empresa-media] {
+    position: sticky;
+    top: 0;
+    height: 100svh;
+    clip-path: inset(
+      0 var(--spacing-gutter) calc(100% - (100vw - 2 * var(--spacing-gutter)) * 0.62)
+        var(--spacing-gutter)
+    );
+  }
+
+  [data-motion] [data-intro-media] {
+    height: auto;
+    aspect-ratio: 16 / 9;
+    /* Margem vertical proporcional à lateral: o cartão tem o mesmo rácio da
+       fotografia. */
+    clip-path: inset(calc(var(--spacing-gutter) * 0.5625) var(--spacing-gutter));
+  }
+
+  [data-motion] [data-intro-media] > div,
+  [data-motion] [data-empresa-media] > div {
+    height: 100%;
+    min-height: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Hero — vídeo conduzido pelo scroll e intro da primeira visita.
+
+   `data-hero-scrub` alonga a secção para haver percurso suficiente para os 8
+   segundos de vídeo. Fica durante toda a visita: retirá-lo a meio encolheria a
+   página debaixo dos pés de quem está a scrollar.
+
+   `data-hero-intro` esconde o header, os véus e o texto até o vídeo terminar e
+   a imagem final assentar; sai sozinho nessa altura. Sem JavaScript ou em reduced motion
+   nenhum dos dois é escrito, e a hero é uma dobra normal com tudo à vista.
+--------------------------------------------------------------------------- */
+
+[data-hero-stage] {
+  height: 100svh;
+}
+
+[data-hero-scrub] [data-hero-stage] {
+  /* Percurso para os 8 s de vídeo correrem inteiros, a imagem final ficar
+     limpa um instante e só depois entrar o texto (ver VIDEO_END e REVEAL_AT em
+     Hero.tsx). Com 320svh o texto entrava com o vídeo a meio. */
+  height: 440svh;
+}
+
+/* Posters da hero (ver Hero.tsx): o primeiro frame quando a intro vai correr,
+   o último quando não corre. Decide o mesmo atributo que liga o scrub, escrito
+   antes da primeira pintura — não há troca visível. */
+[data-hero-poster='first'] {
+  display: none;
+}
+
+[data-hero-scrub] [data-hero-poster='first'] {
+  display: block;
+}
+
+[data-hero-scrub] [data-hero-poster='final'] {
+  display: none;
+}
+
+[data-hero-intro] [data-site-header],
+[data-hero-intro] [data-hero-content],
+[data-hero-intro] [data-hero-veil] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+[data-site-header],
+[data-hero-content],
+[data-hero-veil] {
+  transition: opacity 1s var(--ease-lux);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-site-header],
+  [data-hero-content],
+  [data-hero-veil] {
+    transition: none;
+    opacity: 1 !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Cursor da marca (ver CustomCursor.tsx).
+
+   O cursor do sistema só sai quando o componente está ativo (`data-cursor`,
+   posto por ele). Nos campos de texto volta o I de edição. O ponto e o anel
+   são posicionados por `transform` a partir do canto: a margem negativa
+   centra-os no ponteiro.
+--------------------------------------------------------------------------- */
+
+[data-cursor],
+[data-cursor] * {
+  cursor: none;
+}
+
+[data-cursor] input:not([type='checkbox']):not([type='radio']),
+[data-cursor] textarea,
+[data-cursor] select,
+[data-cursor] [contenteditable='true'] {
+  cursor: auto;
+}
+
+[data-cursor-el] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 120;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-lux);
+  will-change: transform;
+}
+
+[data-cursor-el][data-visible] {
+  opacity: 1;
+}
+
+[data-cursor-el][data-text] {
+  opacity: 0;
+}
+
+[data-cursor-el] > span {
+  display: block;
+  border-radius: 9999px;
+  transition:
+    transform 0.35s var(--ease-lux),
+    background-color 0.35s var(--ease-lux),
+    border-color 0.35s var(--ease-lux);
+}
+
+[data-cursor-ring] {
+  margin: -18px 0 0 -18px;
+}
+
+[data-cursor-ring] > span {
+  width: 36px;
+  height: 36px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 70%, transparent);
+}
+
+[data-cursor-ring][data-hover] > span {
+  transform: scale(1.6);
+  border-color: var(--color-gold);
+  background-color: color-mix(in srgb, var(--color-gold) 12%, transparent);
+}
+
+[data-cursor-ring][data-down] > span {
+  transform: scale(0.8);
+}
+
+[data-cursor-ring][data-hover][data-down] > span {
+  transform: scale(1.35);
+}
+
+[data-cursor-dot] {
+  margin: -3px 0 0 -3px;
+}
+
+[data-cursor-dot] > span {
+  width: 6px;
+  height: 6px;
+  background-color: var(--color-gold);
+}
+
+/* Sobre um alvo, o ponto recolhe: fica só o anel aberto. */
+[data-cursor-dot][data-hover] > span {
+  transform: scale(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-cursor-el] > span {
+    transition: none;
+  }
+}

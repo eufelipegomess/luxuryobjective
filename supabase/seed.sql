@@ -17,9 +17,9 @@ insert into public.projects (
 values
   (
     'o-luzia', 'O''LUZIA', 'desenvolvimento', 'em-execucao', true, 1, true,
-    'https://ik.imagekit.io/53ddmm7un/img%20capa%20Oluzia.jpeg',
-    'Arruamento e fachadas das moradias do O’LUZIA',
-    '50% 62%',
+    'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Fachada%20(frente).jpg?updatedAt=1790251417599',
+    'Fachada de uma das moradias do O’LUZIA',
+    '50% 43%',
     'Conjunto de cinco moradias contemporâneas desenvolvido pela Luxury Objective, atualmente em execução. Linhas depuradas, espaços exteriores generosos e acabamentos de elevado padrão.',
     'Vila do Conde',
     'Moradias unifamiliares',
@@ -35,40 +35,58 @@ values
   )
 on conflict (slug) do nothing;
 
--- Galeria do O'LUZIA: exteriores, depois interiores, depois vivência. As
--- dimensões reais deixam a galeria desenhar a moldura pela fotografia.
-insert into public.project_media (project_id, url, alt, position, width, height)
-select
-  p.id,
-  'https://ik.imagekit.io/53ddmm7un/OLUZIA/' || g.file,
-  g.alt,
-  g.position,
-  g.width,
-  g.height
+-- Galeria do O'LUZIA: as cinco moradias, uma de cada vez. Dentro de cada uma
+-- abre a fachada e só depois entram os interiores. A legenda marca o início
+-- de cada moradia. As dimensões reais deixam a galeria desenhar a moldura
+-- pela fotografia.
+insert into public.project_media (project_id, url, alt, caption, position, width, height)
+select p.id, g.url, g.alt, g.caption, g.position, g.width, g.height
 from public.projects p
 cross join (
   values
-    ('fachada%20luxo%20%C3%A1%20noite.jpg', 'Moradia do O’LUZIA com piscina, ao anoitecer', 0, 3280, 1845),
-    ('1a.jpg', 'Fachada de uma moradia do O’LUZIA', 1, 2400, 3000),
-    ('fachada_oluzia_rua_final_ultra%20(1)%20(1).png', 'Arruamento e fachadas das moradias do O’LUZIA', 2, 1632, 2176),
-    ('2_PP.jpg', 'Moradia do O’LUZIA com zona de estar exterior', 3, 2560, 1440),
-    ('projeto_fotorrealista%20(1).png', 'Fachada e arruamento do O’LUZIA', 4, 1632, 2176),
-    ('4a.jpg', 'Piscina e zona de estar exterior', 5, 2400, 3000),
-    ('2_PP_1%20(1).jpg', 'Moradia do O’LUZIA com piscina', 6, 2560, 1440),
-    ('WhatsApp%20Image%202026-07-16%20at%2011.58.42%20(3).jpeg', 'Piscina interior coberta', 7, 2048, 1152),
-    ('image%20(10).png', 'Sala de estar com escada e pátio interior', 8, 1632, 2176),
-    ('K8yTrLMlfu1CnArAXfTu9X-img-3_1784210120000_na1fn_aW50ZXJpb3JfbGlmZXN0eWxlXzM.webp', 'Sala de estar vista do piso superior', 9, 1632, 2176),
-    ('3%20(2)%20(1).jpg', 'Sala de estar e zona de refeições', 10, 3000, 1688),
-    ('IMG_4860.webp', 'Escada interior em madeira com iluminação embutida', 11, 1664, 2080),
-    ('WhatsApp%20Image%202026-07-16%20at%2011.58.42%20(1).jpeg', 'Quarto ao nascer do sol', 12, 1638, 2048),
-    ('quarto_lifestyle_cha_corrigido%20(1).png', 'Quarto ao fim da tarde', 13, 1440, 2560),
-    ('bathroom_sink_vanity.png', 'Casa de banho em mármore', 14, 1664, 2080),
-    ('bathroom_story_3%20(1).png', 'Casa de banho com duche e bancada dupla', 15, 1440, 2560),
-    ('532489808_18045216527643996_5965576437815426897_n%20(2).jpg', 'Sala de estar com vista para o jardim', 16, 1170, 1170),
-    ('ChatGPT%20Image%2016_07_2026,%2015_19_52.png', 'Zona de leitura junto ao pátio interior', 17, 1254, 1254),
-    ('instagram_table_setting_1.png', 'Mesa de jantar posta', 18, 1920, 1920),
-    ('family_interaction_dining.png', 'Refeição em família na sala de jantar', 19, 1920, 1920),
-    ('breakfast_closeup_lifestyle.png', 'Pequeno-almoço na cozinha', 20, 1920, 1920)
-) as g(file, alt, position, width, height)
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Fachada%20(frente).jpg?updatedAt=1790251417599', 'Moradia 1 do O’LUZIA vista da frente', 'Moradia 1', 0, 2560, 1440),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Piscina.jpg?updatedAt=1790251418398', 'Piscina e zona exterior de estar da moradia 1', null, 1, 2560, 1440),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Sala.jpg?updatedAt=1790251417361', 'Sala de estar da moradia 1', null, 2, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Sala%20.jpg?updatedAt=1790251418050', 'Sala de estar da moradia 1, de outro ângulo', null, 3, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Quarto%20.jpg?updatedAt=1790251417482', 'Quarto principal da moradia 1', null, 4, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Penteadeira.jpg?updatedAt=1790251418089', 'Zona de penteadeira no quarto da moradia 1', null, 5, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Corredor.jpg?updatedAt=1790251417322', 'Corredor de acesso aos quartos da moradia 1', null, 6, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Casa%20de%20banho.jpg?updatedAt=1790251417347', 'Casa de banho da moradia 1', null, 7, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Escada.jpg?updatedAt=1790251416792', 'Escada interior da moradia 1', null, 8, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Tv.jpg?updatedAt=1790251416580', 'Zona de televisão da moradia 1', null, 9, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2001/Cozinha.jpg?updatedAt=1790251416322', 'Cozinha da moradia 1', null, 10, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Fachada%20(Frente).jpg?updatedAt=1790251498495', 'Moradia 2 do O’LUZIA vista da frente', 'Moradia 2', 11, 2560, 1440),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Piscina%20(exterior).jpg?updatedAt=1790251497121', 'Piscina exterior da moradia 2', null, 12, 2560, 1440),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-%20Casa%20de%20banho%20(casal).jpg?updatedAt=1790251503395', 'Casa de banho da suíte da moradia 2', null, 13, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal-%20Casa%20de%20banho.jpg?updatedAt=1790251504567', 'Casa de banho da moradia 2', null, 14, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Cozinha.jpg?updatedAt=1790251505361', 'Cozinha da moradia 2', null, 15, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Quarto.jpg?updatedAt=1790251506039', 'Quarto da moradia 2', null, 16, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Quarto%20(lateral).jpg?updatedAt=1790251505782', 'Quarto da moradia 2, vista lateral', null, 17, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-%20closet%20.png?updatedAt=1790251507130', 'Closet da moradia 2', null, 18, 2560, 1440),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Escada.jpg?updatedAt=1790251506198', 'Escada interior da moradia 2', null, 19, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20closet.png?updatedAt=1790251506285', 'Closet da moradia 2, de outro ângulo', null, 20, 2048, 1152),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Fachada%20(frente).png?updatedAt=1790251548988', 'Moradia 3 do O’LUZIA vista da frente', 'Moradia 3', 21, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Detalhe%20piscina.png?updatedAt=1790251548633', 'Pormenor da piscina da moradia 3', null, 22, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-Sala.jpg?updatedAt=1790251549205', 'Sala de estar da moradia 3', null, 23, 3280, 1845),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Quarto.png?updatedAt=1790251548884', 'Quarto da moradia 3', null, 24, 1672, 940),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Cozinha_.png?updatedAt=1790251546940', 'Cozinha da moradia 3', null, 25, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Sala%20de%20jantar.jpg?updatedAt=1790251538228', 'Sala de jantar da moradia 3', null, 26, 1408, 1056),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20corredor%20(oficial).png?updatedAt=1790251548547', 'Corredor da moradia 3', null, 27, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Escrit%C3%B3rio%20golden%20Hour.jpg?updatedAt=1790251538240', 'Escritório da moradia 3 ao fim da tarde', null, 28, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-Casa%20de%20banho.jpg?updatedAt=1790251544623', 'Casa de banho da moradia 3', null, 29, 3280, 1845),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Sala.png?updatedAt=1790251604909', 'Sala de estar da moradia 4', 'Moradia 4', 30, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Sala%20de%20Jantar.png?updatedAt=1790251603927', 'Sala de jantar da moradia 4', null, 31, 1671, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal-%20Quarto%20amadeirado%20frontal.png?updatedAt=1790251603714', 'Quarto em madeira da moradia 4, vista frontal', null, 32, 1520, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/horizontal%20-%20quarto%20ros%C3%A9.png?updatedAt=1790251613161', 'Quarto em tons rosé da moradia 4', null, 33, 1370, 939),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Quarto%20amadeirado.png?updatedAt=1790251602067', 'Quarto em madeira da moradia 4', null, 34, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20cozinha.png?updatedAt=1790251601920', 'Cozinha da moradia 4', null, 35, 1672, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2004/horizontal%20-%20hall%20.png?updatedAt=1790251600480', 'Hall de entrada da moradia 4', null, 36, 1396, 941),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Piscina%20interior%20(of.).jpg?updatedAt=1790251667328', 'Piscina interior da moradia 5', 'Moradia 5', 37, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sinuca%20-%20Sala%20(vers%C3%A3o%20of.).jpg?updatedAt=1790251669512', 'Sala com mesa de bilhar da moradia 5', null, 38, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Cozinha%20(of.).jpg?updatedAt=1790251667687', 'Cozinha da moradia 5', null, 39, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Quarto%20(of.).jpg?updatedAt=1790251667691', 'Quarto da moradia 5', null, 40, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sala%20de%20Jantar%20(of.).jpg?updatedAt=1790251668753', 'Sala de jantar da moradia 5', null, 41, 3000, 1688),
+    ('https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sala%20(vers%C3%A3o%20of.).jpg?updatedAt=1790251669477', 'Sala de estar da moradia 5', null, 42, 3000, 1688)
+) as g(url, alt, caption, position, width, height)
 where p.slug = 'o-luzia'
   and not exists (select 1 from public.project_media m where m.project_id = p.id);

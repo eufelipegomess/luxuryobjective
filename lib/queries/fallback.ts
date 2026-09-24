@@ -1,7 +1,5 @@
 import type { Project, ProjectMedia, ProjectSummary } from '@/lib/types'
 
-const IK = 'https://ik.imagekit.io/53ddmm7un'
-
 /**
  * Conjunto local de projetos.
  *
@@ -40,113 +38,289 @@ const base = {
 >
 
 /**
- * Galeria do O'LUZIA: exteriores primeiro, depois interiores, depois vivência.
+ * Galeria do O'LUZIA: as cinco moradias, uma de cada vez.
+ *
+ * A ordem é a do cliente e conta o empreendimento casa a casa — dentro de cada
+ * moradia abre a fachada e só depois entram os interiores. A legenda aparece
+ * apenas na primeira fotografia de cada uma: marca onde começa o bloco sem
+ * repetir texto debaixo de todas.
  *
  * As dimensões reais vão com cada imagem para a galeria desenhar a moldura
- * pela fotografia (ver ProjectGallery). A ordem fecha as linhas: verticais aos
- * pares. A IMG-1453 e a IMG-1454 saíram: não são do O'LUZIA.
+ * pela fotografia (ver ProjectGallery). São todas horizontais, ao contrário do
+ * conjunto anterior, que misturava verticais e quadradas.
+ *
+ * O URL vai inteiro, e não montado a partir de um nome de ficheiro: estas
+ * vivem em pastas por lote e trazem o `updatedAt` do ImageKit.
  */
-const oLuziaGallery: { file: string; alt: string; width: number; height: number }[] = [
+const oLuziaGallery: {
+  url: string
+  alt: string
+  caption?: string
+  width: number
+  height: number
+}[] = [
   {
-    file: 'fachada%20luxo%20%C3%A1%20noite.jpg',
-    alt: 'Moradia do O’LUZIA com piscina, ao anoitecer',
-    width: 3280,
-    height: 1845,
-  },
-  { file: '1a.jpg', alt: 'Fachada de uma moradia do O’LUZIA', width: 2400, height: 3000 },
-  {
-    file: 'fachada_oluzia_rua_final_ultra%20(1)%20(1).png',
-    alt: 'Arruamento e fachadas das moradias do O’LUZIA',
-    width: 1632,
-    height: 2176,
-  },
-  {
-    file: '2_PP.jpg',
-    alt: 'Moradia do O’LUZIA com zona de estar exterior',
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Fachada%20(frente).jpg?updatedAt=1790251417599',
+    alt: 'Moradia 1 do O’LUZIA vista da frente',
+    caption: 'Moradia 1',
     width: 2560,
     height: 1440,
   },
   {
-    file: 'projeto_fotorrealista%20(1).png',
-    alt: 'Fachada e arruamento do O’LUZIA',
-    width: 1632,
-    height: 2176,
-  },
-  { file: '4a.jpg', alt: 'Piscina e zona de estar exterior', width: 2400, height: 3000 },
-  { file: '2_PP_1%20(1).jpg', alt: 'Moradia do O’LUZIA com piscina', width: 2560, height: 1440 },
-  {
-    file: 'WhatsApp%20Image%202026-07-16%20at%2011.58.42%20(3).jpeg',
-    alt: 'Piscina interior coberta',
-    width: 2048,
-    height: 1152,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Piscina.jpg?updatedAt=1790251418398',
+    alt: 'Piscina e zona exterior de estar da moradia 1',
+    width: 2560,
+    height: 1440,
   },
   {
-    file: 'image%20(10).png',
-    alt: 'Sala de estar com escada e pátio interior',
-    width: 1632,
-    height: 2176,
-  },
-  {
-    file: 'K8yTrLMlfu1CnArAXfTu9X-img-3_1784210120000_na1fn_aW50ZXJpb3JfbGlmZXN0eWxlXzM.webp',
-    alt: 'Sala de estar vista do piso superior',
-    width: 1632,
-    height: 2176,
-  },
-  {
-    file: '3%20(2)%20(1).jpg',
-    alt: 'Sala de estar e zona de refeições',
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Sala.jpg?updatedAt=1790251417361',
+    alt: 'Sala de estar da moradia 1',
     width: 3000,
     height: 1688,
   },
   {
-    file: 'IMG_4860.webp',
-    alt: 'Escada interior em madeira com iluminação embutida',
-    width: 1664,
-    height: 2080,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Sala%20.jpg?updatedAt=1790251418050',
+    alt: 'Sala de estar da moradia 1, de outro ângulo',
+    width: 3000,
+    height: 1688,
   },
   {
-    file: 'WhatsApp%20Image%202026-07-16%20at%2011.58.42%20(1).jpeg',
-    alt: 'Quarto ao nascer do sol',
-    width: 1638,
-    height: 2048,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Quarto%20.jpg?updatedAt=1790251417482',
+    alt: 'Quarto principal da moradia 1',
+    width: 3000,
+    height: 1688,
   },
   {
-    file: 'quarto_lifestyle_cha_corrigido%20(1).png',
-    alt: 'Quarto ao fim da tarde',
-    width: 1440,
-    height: 2560,
-  },
-  { file: 'bathroom_sink_vanity.png', alt: 'Casa de banho em mármore', width: 1664, height: 2080 },
-  {
-    file: 'bathroom_story_3%20(1).png',
-    alt: 'Casa de banho com duche e bancada dupla',
-    width: 1440,
-    height: 2560,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Penteadeira.jpg?updatedAt=1790251418089',
+    alt: 'Zona de penteadeira no quarto da moradia 1',
+    width: 3000,
+    height: 1688,
   },
   {
-    file: '532489808_18045216527643996_5965576437815426897_n%20(2).jpg',
-    alt: 'Sala de estar com vista para o jardim',
-    width: 1170,
-    height: 1170,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Corredor.jpg?updatedAt=1790251417322',
+    alt: 'Corredor de acesso aos quartos da moradia 1',
+    width: 3000,
+    height: 1688,
   },
   {
-    file: 'ChatGPT%20Image%2016_07_2026,%2015_19_52.png',
-    alt: 'Zona de leitura junto ao pátio interior',
-    width: 1254,
-    height: 1254,
-  },
-  { file: 'instagram_table_setting_1.png', alt: 'Mesa de jantar posta', width: 1920, height: 1920 },
-  {
-    file: 'family_interaction_dining.png',
-    alt: 'Refeição em família na sala de jantar',
-    width: 1920,
-    height: 1920,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Casa%20de%20banho.jpg?updatedAt=1790251417347',
+    alt: 'Casa de banho da moradia 1',
+    width: 3000,
+    height: 1688,
   },
   {
-    file: 'breakfast_closeup_lifestyle.png',
-    alt: 'Pequeno-almoço na cozinha',
-    width: 1920,
-    height: 1920,
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Escada.jpg?updatedAt=1790251416792',
+    alt: 'Escada interior da moradia 1',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Tv.jpg?updatedAt=1790251416580',
+    alt: 'Zona de televisão da moradia 1',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Cozinha.jpg?updatedAt=1790251416322',
+    alt: 'Cozinha da moradia 1',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Fachada%20(Frente).jpg?updatedAt=1790251498495',
+    alt: 'Moradia 2 do O’LUZIA vista da frente',
+    caption: 'Moradia 2',
+    width: 2560,
+    height: 1440,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Piscina%20(exterior).jpg?updatedAt=1790251497121',
+    alt: 'Piscina exterior da moradia 2',
+    width: 2560,
+    height: 1440,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-%20Casa%20de%20banho%20(casal).jpg?updatedAt=1790251503395',
+    alt: 'Casa de banho da suíte da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal-%20Casa%20de%20banho.jpg?updatedAt=1790251504567',
+    alt: 'Casa de banho da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Cozinha.jpg?updatedAt=1790251505361',
+    alt: 'Cozinha da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Quarto.jpg?updatedAt=1790251506039',
+    alt: 'Quarto da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Quarto%20(lateral).jpg?updatedAt=1790251505782',
+    alt: 'Quarto da moradia 2, vista lateral',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-%20closet%20.png?updatedAt=1790251507130',
+    alt: 'Closet da moradia 2',
+    width: 2560,
+    height: 1440,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Escada.jpg?updatedAt=1790251506198',
+    alt: 'Escada interior da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20closet.png?updatedAt=1790251506285',
+    alt: 'Closet da moradia 2, de outro ângulo',
+    width: 2048,
+    height: 1152,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Fachada%20(frente).png?updatedAt=1790251548988',
+    alt: 'Moradia 3 do O’LUZIA vista da frente',
+    caption: 'Moradia 3',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Detalhe%20piscina.png?updatedAt=1790251548633',
+    alt: 'Pormenor da piscina da moradia 3',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-Sala.jpg?updatedAt=1790251549205',
+    alt: 'Sala de estar da moradia 3',
+    width: 3280,
+    height: 1845,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Quarto.png?updatedAt=1790251548884',
+    alt: 'Quarto da moradia 3',
+    width: 1672,
+    height: 940,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Cozinha_.png?updatedAt=1790251546940',
+    alt: 'Cozinha da moradia 3',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Sala%20de%20jantar.jpg?updatedAt=1790251538228',
+    alt: 'Sala de jantar da moradia 3',
+    width: 1408,
+    height: 1056,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20corredor%20(oficial).png?updatedAt=1790251548547',
+    alt: 'Corredor da moradia 3',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Escrit%C3%B3rio%20golden%20Hour.jpg?updatedAt=1790251538240',
+    alt: 'Escritório da moradia 3 ao fim da tarde',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-Casa%20de%20banho.jpg?updatedAt=1790251544623',
+    alt: 'Casa de banho da moradia 3',
+    width: 3280,
+    height: 1845,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Sala.png?updatedAt=1790251604909',
+    alt: 'Sala de estar da moradia 4',
+    caption: 'Moradia 4',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Sala%20de%20Jantar.png?updatedAt=1790251603927',
+    alt: 'Sala de jantar da moradia 4',
+    width: 1671,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal-%20Quarto%20amadeirado%20frontal.png?updatedAt=1790251603714',
+    alt: 'Quarto em madeira da moradia 4, vista frontal',
+    width: 1520,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/horizontal%20-%20quarto%20ros%C3%A9.png?updatedAt=1790251613161',
+    alt: 'Quarto em tons rosé da moradia 4',
+    width: 1370,
+    height: 939,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Quarto%20amadeirado.png?updatedAt=1790251602067',
+    alt: 'Quarto em madeira da moradia 4',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20cozinha.png?updatedAt=1790251601920',
+    alt: 'Cozinha da moradia 4',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/horizontal%20-%20hall%20.png?updatedAt=1790251600480',
+    alt: 'Hall de entrada da moradia 4',
+    width: 1396,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Piscina%20interior%20(of.).jpg?updatedAt=1790251667328',
+    alt: 'Piscina interior da moradia 5',
+    caption: 'Moradia 5',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sinuca%20-%20Sala%20(vers%C3%A3o%20of.).jpg?updatedAt=1790251669512',
+    alt: 'Sala com mesa de bilhar da moradia 5',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Cozinha%20(of.).jpg?updatedAt=1790251667687',
+    alt: 'Cozinha da moradia 5',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Quarto%20(of.).jpg?updatedAt=1790251667691',
+    alt: 'Quarto da moradia 5',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sala%20de%20Jantar%20(of.).jpg?updatedAt=1790251668753',
+    alt: 'Sala de jantar da moradia 5',
+    width: 3000,
+    height: 1688,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Sala%20(vers%C3%A3o%20of.).jpg?updatedAt=1790251669477',
+    alt: 'Sala de estar da moradia 5',
+    width: 3000,
+    height: 1688,
   },
 ]
 
@@ -154,9 +328,9 @@ function oLuziaMedia(projectId: string): ProjectMedia[] {
   return oLuziaGallery.map((item, index) => ({
     id: `seed-o-luzia-${index + 1}`,
     projectId,
-    url: `${IK}/OLUZIA/${item.file}`,
+    url: item.url,
     alt: item.alt,
-    caption: null,
+    caption: item.caption ?? null,
     position: index,
     focalPoint: '50% 50%',
     width: item.width,
@@ -202,11 +376,14 @@ export const fallbackProjects: Project[] = [
         ],
       },
     ],
-    // Capa escolhida pelo cliente. É vertical: na lista da página Projetos
-    // (3:1) o carrossel abre com a primeira horizontal da galeria.
-    coverUrl: 'https://ik.imagekit.io/53ddmm7un/img%20capa%20Oluzia.jpeg',
-    coverAlt: 'Arruamento e fachadas das moradias do O’LUZIA',
-    coverFocalPoint: '50% 62%',
+    // A fachada da moradia 1, que abre a galeria. Horizontal e de alta
+    // resolução: a capa anterior era vertical e ficava mal na lista 3:1.
+    coverUrl: oLuziaGallery[0]!.url,
+    coverAlt: 'Fachada de uma das moradias do O’LUZIA',
+    // A lista da página Projetos recorta a capa a 3:1 — vê-se pouco mais de
+    // metade da altura. Subir o ponto focal põe a casa inteira nessa faixa,
+    // do beirado ao terraço; a meio mostrava parede e relva.
+    coverFocalPoint: '50% 43%',
     media: oLuziaMedia('seed-o-luzia'),
   },
   {

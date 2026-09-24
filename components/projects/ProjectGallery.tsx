@@ -4,17 +4,29 @@ import { cn } from '@/lib/utils'
 import { imageSource, PHOTO_QUALITY } from '@/lib/images'
 
 /**
- * - `wide`: horizontal com resolução para a largura toda.
- * - `small`: horizontal com pouca resolução (menos de 1600 px) — a largura toda
- *   esticava-a; a meia largura fica nítida, e segue aos pares.
+ * - `wide`: horizontal, à largura toda.
+ * - `small`: horizontal a meia largura, aos pares. É o que acontece a uma
+ *   horizontal de pouca resolução (menos de 1600 px), que a largura toda
+ *   esticaria, e às fotografias que seguem a que abre um bloco.
  * - `tall`: vertical ou quadrada, a meia largura em 4:5.
  */
 type Kind = 'wide' | 'small' | 'tall'
 
-function kindOf(item: ProjectMedia, index: number): Kind {
+/**
+ * Quando o conjunto tem legendas, elas marcam onde começa cada bloco — no
+ * O'LUZIA, cada uma das cinco moradias. Aí só a fotografia que abre o bloco
+ * ocupa a largura toda e as outras seguem aos pares: com 43 horizontais
+ * seguidas, todas à largura toda, a página passava dos 36 000 px, quarenta
+ * ecrãs de scroll sem um único momento de respiração.
+ *
+ * Sem legendas nenhumas não há blocos que marcar, e vale o critério antigo:
+ * horizontal com resolução chegue, largura toda.
+ */
+function kindOf(item: ProjectMedia, index: number, porBlocos: boolean): Kind {
   if (!item.width || !item.height) return index % 3 === 0 ? 'wide' : 'tall'
   if (item.width / item.height < 1.2) return 'tall'
-  return item.width >= 1600 ? 'wide' : 'small'
+  if (item.width < 1600) return 'small'
+  return porBlocos ? (item.caption ? 'wide' : 'small') : 'wide'
 }
 
 /**
@@ -36,7 +48,8 @@ function kindOf(item: ProjectMedia, index: number): Kind {
 export function ProjectGallery({ items }: { items: ProjectMedia[] }) {
   if (items.length === 0) return null
 
-  const kinds = items.map(kindOf)
+  const porBlocos = items.some((item) => item.caption)
+  const kinds = items.map((item, index) => kindOf(item, index, porBlocos))
   const orphans = new Set<number>()
   for (let i = 0; i < items.length; ) {
     if (kinds[i] === 'wide') {

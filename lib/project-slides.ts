@@ -39,7 +39,14 @@ export function projectSlides(project: ProjectSummary, leadLandscape = false): C
     : []
   const gallery: CarouselSlide[] = project.preview.filter((item) => item.url !== project.coverUrl)
 
-  if (!leadLandscape) return [...cover, ...gallery]
+  // A capa não traz dimensões, mas costuma ser também uma fotografia da
+  // galeria — e essa traz. Se a capa já é horizontal, a moldura larga não tem
+  // problema nenhum com ela e não há nada a reordenar: abrir pela segunda
+  // fotografia só trocaria a fachada pelo que vem a seguir.
+  const capaNaGaleria = project.preview.find((item) => item.url === project.coverUrl)
+  const capaHorizontal = capaNaGaleria ? isLandscape(capaNaGaleria) : false
+
+  if (!leadLandscape || capaHorizontal) return [...cover, ...gallery]
 
   const first = gallery.findIndex(isLandscape)
   if (first < 0) return [...cover, ...gallery]

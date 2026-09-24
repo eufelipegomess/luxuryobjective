@@ -112,15 +112,19 @@ export const media = {
    * ocupar o ecrã todo. Por isso é larga e de alta resolução — uma imagem
    * vertical de 1080px ficava esticada a 1440 e perdia nitidez.
    *
-   * Exterior e não interior: numa promotora a casa apresenta-se pela fachada.
-   * A janela inicial fica do lado direito do ecrã, onde esta fotografia tem uma
-   * parede branca lisa; ancorada a 0% na horizontal, o que lá aparece é a casa.
+   * Exterior e não interior: numa promotora a casa apresenta-se por fora. A
+   * janela inicial é estreita e fica do lado direito do ecrã; ancorada a 60% na
+   * horizontal, o que lá aparece é a moradia e não as palmeiras da margem
+   * esquerda.
    */
   apresentacao: {
-    src: `${IK}/OLUZIA/2_PP_1%20(1).jpg`,
-    alt: 'Moradia com piscina do empreendimento O’LUZIA',
+    src: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Piscina%20(exterior).jpg?updatedAt=1790251497121',
+    alt: 'Moradia do O’LUZIA com piscina exterior',
     ratio: 3 / 4,
-    position: '0% 50%',
+    // A casa tem de estar ao meio da altura. Aberta, a imagem cobre o ecrã
+    // mas a janela mostra só uma faixa central dela — numa fotografia com a
+    // casa em cima e a piscina em baixo, essa faixa apanhava só o deck.
+    position: '55% 50%',
     slot: 'Apresentação da empresa',
   } satisfies MediaRef,
 
@@ -135,10 +139,14 @@ export const media = {
     slot: 'Área — Desenvolvimento Imobiliário',
   } satisfies MediaRef,
 
-  /** Serviços — Construção. Moradia do O'LUZIA, construção de raiz, em 16:9. */
+  /**
+   * Serviços — Construção. Moradia do O'LUZIA, construção de raiz. Diurna pela
+   * mesma razão do painel acima: o véu escuro a 72% comia uma fotografia de
+   * fim de tarde.
+   */
   areaConstrucao: {
-    src: `${IK}/OLUZIA/2_PP.jpg`,
-    alt: 'Moradia do empreendimento O’LUZIA',
+    src: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Fachada%20(frente).png?updatedAt=1790251548988',
+    alt: 'Fachada de uma moradia do O’LUZIA em dia de sol',
     ratio: 4 / 3,
     position: '50% 50%',
     slot: 'Serviços — Construção',
@@ -159,12 +167,13 @@ export const media = {
   /** Transição narrativa para a secção de futuros projetos. */
   futuros: {
     // Arruamento e fachadas em vez de um interior: a secção fala de terrenos e
-    // oportunidades. A fotografia é vertical e a faixa 21:9 mostra só um terço
-    // da altura, por isso o foco desce até à banda das casas.
-    src: `${IK}/OLUZIA/fachada_oluzia_rua_final_ultra%20(1)%20(1).png`,
+    // oportunidades, e esta tem o acesso e o alinhamento das casas. A faixa
+    // 21:9 corta pouco mais de metade da altura de uma 16:9; o foco a 52%
+    // deixa a casa inteira lá dentro.
+    src: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-Fachada%20(Frente).jpg?updatedAt=1790251498495',
     alt: '',
     ratio: 21 / 9,
-    position: '50% 58%',
+    position: '50% 52%',
     slot: 'Futuros projetos — textura arquitetónica',
   } satisfies MediaRef,
 

@@ -248,9 +248,8 @@ Identificado durante a implementação:
 - [ ] **Retratos** de Nathalie Ramos Ferreira e Bruno Carvalho.
 - [ ] Imagens dos painéis das duas áreas de atuação, da apresentação da empresa
       e da abertura da página Empresa.
-- [ ] **URLs reais** do Instagram, Facebook e LinkedIn. Os perfis aparecem como
-      texto aprovado (`@luxuryobjective_`, `Luxury Objective`) mas sem link, e
-      não entram no JSON-LD.
+- [x] **URLs reais** do Instagram, Facebook e LinkedIn, no rodapé, na página
+      de contacto e no `sameAs` do JSON-LD.
 - [x] **Política de Privacidade** e **Política de Cookies**, em
       `content/legal.ts`. Descrevem o que o site faz mesmo: os campos dos seis
       formulários, o IP guardado com hash, os três subcontratantes, e nenhum

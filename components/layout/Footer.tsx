@@ -69,7 +69,18 @@ export function Footer() {
             </address>
             <ul className="mt-4 flex flex-col gap-2 text-sm text-bone-muted">
               {contacto.redes.map((rede) => (
-                <li key={rede.label}>{rede.label}</li>
+                <li key={rede.label}>
+                  {/* `noopener` é o que impede a página aberta de mexer nesta
+                      pelo `window.opener`. */}
+                  <a
+                    href={rede.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="transition-colors hover:text-bone"
+                  >
+                    {rede.label}
+                  </a>
+                </li>
               ))}
             </ul>
           </div>

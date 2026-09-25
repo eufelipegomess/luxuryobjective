@@ -27,7 +27,41 @@ export function toGalleryItems(media: ProjectMedia[]): GalleryItem[] {
 }
 
 /**
+ * Domínios de onde uma imagem pode vir por link.
+ *
+ * São os mesmos que o `next.config.ts` autoriza em `remotePatterns`: fora
+ * destes o `next/image` recusa-se a servir a imagem e a galeria ficaria com um
+ * buraco. Se um dia entrar outro alojamento de imagens, entra nos dois sítios.
+ */
+const HOSTS = [
+  'ik.imagekit.io',
+  ...(process.env.NEXT_PUBLIC_SUPABASE_URL
+    ? [new URL(process.env.NEXT_PUBLIC_SUPABASE_URL).hostname]
+    : []),
+]
+
+/**
+ * Largura e altura reais, pedidas ao browser.
+ *
+ * Quem cola um link não sabe as dimensões de cor, e o site precisa delas para
+ * reservar o espaço da imagem e para saber se é horizontal. Falhar a medição
+ * não impede nada: fica sem dimensões, como já acontecia antes.
+ */
+function medir(url: string): Promise<{ width: number | null; height: number | null }> {
+  return new Promise((resolve) => {
+    const img = new window.Image()
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight })
+    img.onerror = () => resolve({ width: null, height: null })
+    img.src = url
+  })
+}
+
+/**
  * Galeria do projeto: upload, reordenação e metadados por imagem.
+ *
+ * As imagens entram por duas vias: do computador, que as guarda no
+ * armazenamento do Supabase, ou por link, para as que já estão alojadas
+ * noutro sítio — é o caso das do ImageKit, que são a maioria deste site.
  *
  * A reordenação tem duas vias — arrastar com o rato e mover com botões. Só
  * drag-and-drop deixaria de fora quem usa teclado, e o briefing exige o painel
@@ -41,6 +75,8 @@ export function MediaManager({
   onChange: (next: GalleryItem[]) => void
 }) {
   const [uploading, setUploading] = useState(false)
+  const [link, setLink] = useState('')
+  const [aLigar, setALigar] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const dragIndex = useRef<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -90,6 +126,51 @@ export function MediaManager({
     setUploading(false)
   }
 
+  /** Aceita vários de uma vez: um link por linha, ou separados por espaços. */
+  const adicionarPorLink = async () => {
+    const enderecos = link.split(/\s+/).filter(Boolean)
+    if (enderecos.length === 0) return
+
+    setALigar(true)
+    setError(null)
+    const added: GalleryItem[] = []
+    const recusados: string[] = []
+
+    for (const bruto of enderecos) {
+      let alvo: URL
+      try {
+        alvo = new URL(bruto)
+      } catch {
+        recusados.push(bruto)
+        continue
+      }
+      if (alvo.protocol !== 'https:' || !HOSTS.includes(alvo.hostname)) {
+        recusados.push(bruto)
+        continue
+      }
+      const { width, height } = await medir(alvo.toString())
+      added.push({
+        url: alvo.toString(),
+        alt: '',
+        caption: '',
+        focalPoint: '50% 50%',
+        width,
+        height,
+      })
+    }
+
+    if (added.length > 0) {
+      onChange([...items, ...added])
+      setLink('')
+    }
+    if (recusados.length > 0) {
+      setError(
+        `${recusados.length} link(s) fora dos domínios permitidos (${HOSTS.join(', ')}) ou mal formados.`,
+      )
+    }
+    setALigar(false)
+  }
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-4">
@@ -113,10 +194,41 @@ export function MediaManager({
         >
           {uploading ? 'A carregar…' : '+ Adicionar imagens'}
         </button>
-        <p role="alert" aria-live="polite" className="text-sm text-gold">
-          {error}
+      </div>
+
+      {/* Entrada por link. Fica ao lado do upload e não escondida atrás de um
+          separador: para este site é a via principal — quase todas as
+          fotografias já vivem no ImageKit. */}
+      <div className="flex flex-col gap-2 border border-line p-4">
+        <label htmlFor="media-link" className="text-nav text-bone-muted">
+          Ou colar o endereço da imagem
+        </label>
+        <div className="flex flex-col gap-3 md:flex-row">
+          <textarea
+            id="media-link"
+            rows={2}
+            value={link}
+            onChange={(event) => setLink(event.target.value)}
+            placeholder="https://ik.imagekit.io/…   (um por linha para juntar várias)"
+            className="min-h-[48px] w-full border border-line bg-transparent px-3 py-2 text-sm text-bone placeholder:text-bone-muted/60 focus:border-line-strong focus:outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => void adicionarPorLink()}
+            disabled={aLigar || link.trim().length === 0}
+            className="min-h-[48px] shrink-0 border border-line px-6 text-nav text-bone-muted hover:border-line-strong hover:text-bone disabled:opacity-50"
+          >
+            {aLigar ? 'A juntar…' : 'Juntar à galeria'}
+          </button>
+        </div>
+        <p className="text-xs text-bone-muted/70">
+          Aceita imagens de {HOSTS.join(' e ')}. As dimensões são lidas automaticamente.
         </p>
       </div>
+
+      <p role="alert" aria-live="polite" className="text-sm text-gold">
+        {error}
+      </p>
 
       {items.length === 0 ? (
         <p className="border border-line p-6 text-sm text-bone-muted">Sem imagens na galeria.</p>

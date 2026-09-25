@@ -53,12 +53,19 @@ export default function ContactoPage() {
     },
     {
       label: contacto.redesLabel,
-      // TODO (conteúdo real pendente): ganham link quando o cliente fornecer os
-      // URLs. Não inventamos endereços.
       content: (
         <ul className="flex flex-col gap-1.5 text-bone">
           {contacto.redes.map((rede) => (
-            <li key={rede.label}>{rede.label}</li>
+            <li key={rede.label}>
+              <a
+                href={rede.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline-offset-4 transition-colors hover:underline"
+              >
+                {rede.label}
+              </a>
+            </li>
           ))}
         </ul>
       ),

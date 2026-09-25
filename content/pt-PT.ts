@@ -213,8 +213,9 @@ export const contacto = {
   email: { label: 'geral@luxuryobjective.com', href: 'mailto:geral@luxuryobjective.com' },
   redesLabel: 'Redes sociais',
   redes: [
-    { label: 'Instagram e Facebook: @luxuryobjective_' },
-    { label: 'LinkedIn: Luxury Objective' },
+    { label: 'Instagram', href: 'https://www.instagram.com/luxuryobjective_/' },
+    { label: 'Facebook', href: 'https://www.facebook.com/luxuryobjective/' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/luxury-objective-4092aa3b2/' },
   ],
   form: { title: 'Formulário de contacto', cta: 'Enviar mensagem' },
 } as const

@@ -1,9 +1,13 @@
 import { siteConfig } from '@/lib/config'
+import { contacto } from '@/content/pt-PT'
 
 /**
- * JSON-LD Organization apenas com dados aprovados no PDF: nome, morada,
- * telefones e e-mail. Sem data de fundação, avaliações, preços, coordenadas ou
- * perfis sociais — nada disso foi fornecido pelo cliente.
+ * JSON-LD Organization apenas com dados confirmados pelo cliente: nome, morada,
+ * telefones, e-mail e os perfis sociais. Sem data de fundação, avaliações,
+ * preços ou coordenadas — nada disso foi fornecido.
+ *
+ * O `sameAs` é o que liga a empresa aos perfis: sem ele, o Google vê um site e
+ * três páginas sociais sem relação declarada entre si.
  */
 export function OrganizationJsonLd() {
   const data = {
@@ -21,6 +25,7 @@ export function OrganizationJsonLd() {
       addressRegion: siteConfig.address.region,
       addressCountry: siteConfig.address.country,
     },
+    sameAs: contacto.redes.map((rede) => rede.href),
     contactPoint: siteConfig.phones.map((telephone) => ({
       '@type': 'ContactPoint',
       telephone,

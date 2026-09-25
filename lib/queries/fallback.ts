@@ -41,13 +41,13 @@ const base = {
  * Galeria do O'LUZIA: as cinco moradias, uma de cada vez.
  *
  * A ordem é a do cliente e conta o empreendimento casa a casa — dentro de cada
- * moradia abre a fachada e só depois entram os interiores. A legenda aparece
- * apenas na primeira fotografia de cada uma: marca onde começa o bloco sem
- * repetir texto debaixo de todas.
+ * moradia abrem os exteriores e só depois entram os interiores. A legenda
+ * aparece apenas na primeira fotografia de cada uma: marca onde começa o bloco
+ * sem repetir texto debaixo de todas.
  *
- * As dimensões reais vão com cada imagem para a galeria desenhar a moldura
- * pela fotografia (ver ProjectGallery). São todas horizontais, ao contrário do
- * conjunto anterior, que misturava verticais e quadradas.
+ * As dimensões reais vão com cada imagem para reservar o espaço na página. O
+ * `focal` é a exceção: a galeria mostra tudo em 16:9 e quase todas estas são
+ * 16:9, mas as que não são cortam, e aí interessa dizer por onde.
  *
  * O URL vai inteiro, e não montado a partir de um nome de ficheiro: estas
  * vivem em pastas por lote e trazem o `updatedAt` do ImageKit.
@@ -56,6 +56,7 @@ const oLuziaGallery: {
   url: string
   alt: string
   caption?: string
+  focal?: string
   width: number
   height: number
 }[] = [
@@ -140,6 +141,12 @@ const oLuziaGallery: {
     height: 1440,
   },
   {
+    url: 'https://ik.imagekit.io/53ddmm7un/sala%20lote%2002.jpeg',
+    alt: 'Sala de estar da moradia 2',
+    width: 3000,
+    height: 1688,
+  },
+  {
     url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20-%20Casa%20de%20banho%20(casal).jpg?updatedAt=1790251503395',
     alt: 'Casa de banho da suíte da moradia 2',
     width: 3000,
@@ -182,12 +189,6 @@ const oLuziaGallery: {
     height: 1688,
   },
   {
-    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2002/Horizontal%20closet.png?updatedAt=1790251506285',
-    alt: 'Closet da moradia 2, de outro ângulo',
-    width: 2048,
-    height: 1152,
-  },
-  {
     url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Fachada%20(frente).png?updatedAt=1790251548988',
     alt: 'Moradia 3 do O’LUZIA vista da frente',
     caption: 'Moradia 3',
@@ -195,8 +196,8 @@ const oLuziaGallery: {
     height: 941,
   },
   {
-    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2003/Horizontal%20-%20Detalhe%20piscina.png?updatedAt=1790251548633',
-    alt: 'Pormenor da piscina da moradia 3',
+    url: 'https://ik.imagekit.io/53ddmm7un/piscina%20lote%2003.png',
+    alt: 'Piscina exterior da moradia 3',
     width: 1672,
     height: 941,
   },
@@ -243,9 +244,22 @@ const oLuziaGallery: {
     height: 1845,
   },
   {
+    url: 'https://ik.imagekit.io/53ddmm7un/img%20casa%20lote%2004%201.PNG',
+    alt: 'Moradia 4 do O’LUZIA vista da frente',
+    caption: 'Moradia 4',
+    width: 1672,
+    height: 941,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/img%20casa%20lote%2004%202.PNG',
+    alt: 'Moradia 4 do O’LUZIA vista de trás',
+    focal: '50% 40%',
+    width: 1115,
+    height: 939,
+  },
+  {
     url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2004/Horizontal%20-%20Sala.png?updatedAt=1790251604909',
     alt: 'Sala de estar da moradia 4',
-    caption: 'Moradia 4',
     width: 1672,
     height: 941,
   },
@@ -286,9 +300,21 @@ const oLuziaGallery: {
     height: 941,
   },
   {
+    url: 'https://ik.imagekit.io/53ddmm7un/img%20casa%20lote%2005%20frente.jpeg',
+    alt: 'Moradia 5 do O’LUZIA vista da frente',
+    caption: 'Moradia 5',
+    width: 2560,
+    height: 1440,
+  },
+  {
+    url: 'https://ik.imagekit.io/53ddmm7un/img%20casa%20lote%2005%20tr%C3%A1s.jpeg',
+    alt: 'Moradia 5 do O’LUZIA vista de trás, com piscina',
+    width: 2560,
+    height: 1440,
+  },
+  {
     url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2005/Piscina%20interior%20(of.).jpg?updatedAt=1790251667328',
     alt: 'Piscina interior da moradia 5',
-    caption: 'Moradia 5',
     width: 3000,
     height: 1688,
   },
@@ -332,7 +358,7 @@ function oLuziaMedia(projectId: string): ProjectMedia[] {
     alt: item.alt,
     caption: item.caption ?? null,
     position: index,
-    focalPoint: '50% 50%',
+    focalPoint: item.focal ?? '50% 50%',
     width: item.width,
     height: item.height,
   }))

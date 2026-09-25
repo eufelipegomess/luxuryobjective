@@ -46,6 +46,19 @@ export const siteConfig = {
    * domínio definitivo não deixa o site invisível.
    */
   noindex: noindexPor(process.env.NEXT_PUBLIC_NOINDEX),
+  /**
+   * A imagem que aparece quando alguém partilha o site no WhatsApp, no
+   * Facebook ou no LinkedIn. Sem ela, a partilha sai com um retângulo vazio.
+   *
+   * É a fachada do O'LUZIA, redimensionada pelo ImageKit para os 1200x630 que
+   * as redes esperam — em vez de um ficheiro à parte que envelhecia sozinho.
+   */
+  ogImage: {
+    url: 'https://ik.imagekit.io/53ddmm7un/LOTE%2001/Fachada%20(frente).jpg?tr=w-1200,h-630',
+    width: 1200,
+    height: 630,
+    alt: 'Fachada de uma das moradias do empreendimento O’LUZIA',
+  },
   email: 'geral@luxuryobjective.com',
   phones: ['+351912221025', '+351252104920'],
   address: {

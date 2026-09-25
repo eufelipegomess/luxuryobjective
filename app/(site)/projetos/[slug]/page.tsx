@@ -11,7 +11,7 @@ import { BreadcrumbJsonLd } from '@/components/layout/JsonLd'
 import { getProjectBySlug, getPublishedSlugs, getRelatedProjects } from '@/lib/queries/projects'
 import { CATEGORY_LABELS, STATUS_LABELS } from '@/lib/types'
 import { media } from '@/lib/media'
-import { routes } from '@/lib/config'
+import { routes, siteConfig } from '@/lib/config'
 import { home, nav, ui } from '@/content/pt-PT'
 import { compactMeta, noWidow, truncate } from '@/lib/utils'
 
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title,
       ...(description ? { description } : {}),
       url: `/projetos/${project.slug}`,
-      ...(project.coverUrl ? { images: [{ url: project.coverUrl }] } : {}),
+      images: project.coverUrl ? [{ url: project.coverUrl }] : [siteConfig.ogImage],
     },
   }
 }

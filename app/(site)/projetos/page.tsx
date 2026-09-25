@@ -7,12 +7,14 @@ import { getPublishedProjects } from '@/lib/queries/projects'
 import { PROJECT_CATEGORIES, type ProjectCategory } from '@/lib/types'
 import { nav, projetos } from '@/content/pt-PT'
 import { noWidow, truncate } from '@/lib/utils'
+import { siteConfig } from '@/lib/config'
 
 export const metadata: Metadata = {
   title: nav.projetos,
   description: truncate(projetos.intro.body, 155),
   alternates: { canonical: '/projetos' },
   openGraph: {
+    images: [siteConfig.ogImage],
     title: `${nav.projetos} — Luxury Objective`,
     description: truncate(projetos.intro.body, 155),
     url: '/projetos',

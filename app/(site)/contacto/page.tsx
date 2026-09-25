@@ -4,12 +4,14 @@ import { ContactoForm } from '@/components/forms/SimpleForms'
 import { MapEmbed } from '@/components/sections/MapEmbed'
 import { contacto, nav } from '@/content/pt-PT'
 import { truncate } from '@/lib/utils'
+import { siteConfig } from '@/lib/config'
 
 export const metadata: Metadata = {
   title: nav.contacto,
   description: truncate(contacto.body, 155),
   alternates: { canonical: '/contacto' },
   openGraph: {
+    images: [siteConfig.ogImage],
     title: `${nav.contacto} — Luxury Objective`,
     description: truncate(contacto.body, 155),
     url: '/contacto',

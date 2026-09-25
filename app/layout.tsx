@@ -37,6 +37,7 @@ export const metadata: Metadata = {
     locale: 'pt_PT',
     siteName: siteConfig.name,
     url: siteConfig.url,
+    images: [siteConfig.ogImage],
   },
   twitter: { card: 'summary_large_image' },
   // O robots.txt é só um pedido; esta meta tag é o que fecha mesmo a porta.

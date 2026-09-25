@@ -6,12 +6,14 @@ import { ValoresMarquee } from '@/components/sections/ValoresMarquee'
 import { IconMissao, IconValores, IconVisao } from '@/components/ui/Icons'
 import { empresa, home, nav } from '@/content/pt-PT'
 import { noWidow, truncate } from '@/lib/utils'
+import { siteConfig } from '@/lib/config'
 
 export const metadata: Metadata = {
   title: nav.empresa,
   description: truncate(empresa.quemSomos.body, 155),
   alternates: { canonical: '/empresa' },
   openGraph: {
+    images: [siteConfig.ogImage],
     title: `${nav.empresa} — Luxury Objective`,
     description: truncate(empresa.quemSomos.body, 155),
     url: '/empresa',

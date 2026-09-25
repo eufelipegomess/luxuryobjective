@@ -4,7 +4,7 @@ import { MediaSlot } from '@/components/ui/MediaSlot'
 import { PageHeader } from '@/components/layout/PageHeader'
 import { OrcamentosOportunidades } from '@/components/sections/OrcamentosOportunidades'
 import { media, type MediaRef } from '@/lib/media'
-import { routes } from '@/lib/config'
+import { routes, siteConfig } from '@/lib/config'
 import { nav, servicos } from '@/content/pt-PT'
 import { noWidow, truncate } from '@/lib/utils'
 
@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   description: truncate(servicos.intro.body, 155),
   alternates: { canonical: '/servicos' },
   openGraph: {
+    images: [siteConfig.ogImage],
     title: `${nav.servicos} — Luxury Objective`,
     description: truncate(servicos.intro.body, 155),
     url: '/servicos',

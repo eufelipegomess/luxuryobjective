@@ -3,10 +3,21 @@
 /** O domínio definitivo. É o único que deve aparecer na pesquisa. */
 const CANONICO = 'https://luxuryobjective.com'
 
+/**
+ * O endereço onde o site responde, já resolvido.
+ *
+ * É este valor — e não a variável em bruto — que decide o canonical e a
+ * indexação. Comparar a variável em bruto tratava «não definida» como um
+ * domínio estranho e mantinha fechado um site que estava no domínio certo.
+ */
+const URL_DO_SITE = (
+  process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.NODE_ENV === 'production' ? CANONICO : 'http://localhost:3000')
+).replace(/\/$/, '')
+
 function noindexPor(valor: string | undefined): boolean {
   if (valor === 'true') return true
   if (valor === 'false') return false
-  return (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '') !== CANONICO
+  return URL_DO_SITE !== CANONICO
 }
 
 
@@ -23,9 +34,7 @@ export const siteConfig = {
    * sitemap a apontar para a máquina de quem fez o build — ninguém repara até
    * a primeira partilha não mostrar imagem.
    */
-  url: (
-    process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.NODE_ENV === 'production' ? CANONICO : 'http://localhost:3000')
-  ).replace(/\/$/, ''),
+  url: URL_DO_SITE,
   /**
    * Fecha o site aos motores de busca.
    *

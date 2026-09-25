@@ -1,17 +1,14 @@
 import type { Metadata } from 'next'
-import { LegalPending } from '@/components/layout/LegalPending'
-import { footer } from '@/content/pt-PT'
+import { LegalDocument } from '@/components/layout/LegalDocument'
+import { cookies } from '@/content/legal'
 
 export const metadata: Metadata = {
-  title: footer.cookies,
+  title: cookies.title,
+  description:
+    'O site público da Luxury Objective não guarda cookies. Esta página explica o que existe na área reservada e porque não há pedido de autorização.',
   alternates: { canonical: '/cookies' },
-  robots: { index: false, follow: true },
 }
 
-/**
- * TODO (conteúdo real pendente): substituir por a política de cookies aprovada
- * pelo cliente. Ver README, secção "Pendências de conteúdo".
- */
 export default function CookiesPage() {
-  return <LegalPending title={footer.cookies} />
+  return <LegalDocument doc={cookies} />
 }

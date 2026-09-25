@@ -251,10 +251,12 @@ Identificado durante a implementação:
 - [ ] **URLs reais** do Instagram, Facebook e LinkedIn. Os perfis aparecem como
       texto aprovado (`@luxuryobjective_`, `Luxury Objective`) mas sem link, e
       não entram no JSON-LD.
-- [ ] **Política de Privacidade** e **Política de Cookies**. As rotas
-      `/privacidade` e `/cookies` existem para os links do rodapé serem válidos
-      e declaram-se em preparação. Publicar texto jurídico fictício seria pior
-      do que não ter nenhum — ver `components/layout/LegalPending.tsx`.
+- [x] **Política de Privacidade** e **Política de Cookies**, em
+      `content/legal.ts`. Descrevem o que o site faz mesmo: os campos dos seis
+      formulários, o IP guardado com hash, os três subcontratantes, e nenhum
+      cookie no site público. Revê-las sempre que o site passar a recolher
+      outra coisa — estatísticas, um pixel, um chat — antes de essa coisa
+      entrar.
 
 ## Notas de implementação
 

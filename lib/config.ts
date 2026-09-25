@@ -1,5 +1,15 @@
 /** Configuração de site — tudo o que muda entre ambientes vive aqui. */
 
+/** O domínio definitivo. É o único que deve aparecer na pesquisa. */
+const CANONICO = 'https://luxuryobjective.com'
+
+function noindexPor(valor: string | undefined): boolean {
+  if (valor === 'true') return true
+  if (valor === 'false') return false
+  return (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '') !== CANONICO
+}
+
+
 export const siteConfig = {
   name: 'Luxury Objective',
   tagline: 'Promotora Imobiliária Integrada',
@@ -14,17 +24,19 @@ export const siteConfig = {
    * a primeira partilha não mostrar imagem.
    */
   url: (
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.NODE_ENV === 'production' ? 'https://luxuryobjective.com' : 'http://localhost:3000')
+    process.env.NEXT_PUBLIC_SITE_URL ?? (process.env.NODE_ENV === 'production' ? CANONICO : 'http://localhost:3000')
   ).replace(/\/$/, ''),
   /**
-   * Fecha o site aos motores de busca. Fechado por omissão: abre-se de uma vez,
-   * no domínio definitivo e quando o conteúdo estiver aprovado, com
-   * `NEXT_PUBLIC_NOINDEX=false`. Ao contrário — aberto por omissão — bastava
-   * esquecer a variável numa pré-visualização para ela competir com o site
-   * real na pesquisa, e tirar do índice depois dá muito mais trabalho.
+   * Fecha o site aos motores de busca.
+   *
+   * A variável manda, nos dois sentidos. Sem ela, decide o domínio: o
+   * definitivo é indexado, tudo o resto — pré-visualizações, staging, o
+   * computador de quem desenvolve — fica fechado. Assim o valor por omissão
+   * está certo nos dois lados e ninguém tem de se lembrar de nada: esquecer a
+   * variável numa pré-visualização não a põe a competir com o site real, e no
+   * domínio definitivo não deixa o site invisível.
    */
-  noindex: process.env.NEXT_PUBLIC_NOINDEX !== 'false',
+  noindex: noindexPor(process.env.NEXT_PUBLIC_NOINDEX),
   email: 'geral@luxuryobjective.com',
   phones: ['+351912221025', '+351252104920'],
   address: {

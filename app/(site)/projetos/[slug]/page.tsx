@@ -15,7 +15,7 @@ import { routes } from '@/lib/config'
 import { home, nav, ui } from '@/content/pt-PT'
 import { compactMeta, noWidow, truncate } from '@/lib/utils'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 type Props = { params: Promise<{ slug: string }> }
 

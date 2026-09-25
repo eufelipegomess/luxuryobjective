@@ -35,6 +35,11 @@ values
   )
 on conflict (slug) do nothing;
 
+-- Só para arrancar um projeto Supabase de raiz. Para mudar a galeria de um
+-- que já existe, usar `npm run sincronizar`, que lê
+-- `content/oluzia-galeria.json` — esta lista é gerada a partir do mesmo
+-- ficheiro e tem de continuar a sê-lo.
+--
 -- Galeria do O'LUZIA: as cinco moradias, uma de cada vez. Dentro de cada uma
 -- abrem os exteriores e só depois entram os interiores. A legenda marca o
 -- início de cada moradia. As dimensões reais reservam o espaço na página; o

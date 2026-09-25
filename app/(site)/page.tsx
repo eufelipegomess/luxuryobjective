@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 }
 
 // Os projetos vêm do painel; uma hora de cache chega para o ritmo de publicação.
-export const revalidate = 3600
+export const revalidate = 300
 
 export default async function HomePage() {
   const featured = await getFeaturedProjects()

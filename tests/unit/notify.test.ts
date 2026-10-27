@@ -15,11 +15,11 @@ describe('emailDeSubmissao', () => {
   )
 
   it('vai para a caixa da equipa', () => {
-    expect(contacto.to).toEqual(['equipaaluxury@gmail.com'])
+    expect(contacto.to).toBe('equipaaluxury@gmail.com')
   })
 
   it('responde a quem preencheu', () => {
-    expect(contacto.reply_to).toBe('ana@exemplo.pt')
+    expect(contacto.replyTo).toBe('ana@exemplo.pt')
   })
 
   it('leva o nome no assunto', () => {

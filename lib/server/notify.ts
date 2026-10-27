@@ -1,4 +1,5 @@
 import 'server-only'
+import nodemailer from 'nodemailer'
 import { forms } from '@/content/pt-PT'
 import { formatBytes } from '@/lib/utils'
 import type { SubmissionFile, SubmissionKind } from '@/lib/types'
@@ -12,6 +13,11 @@ import type { SubmissionFile, SubmissionKind } from '@/lib/types'
  *
  * Os ficheiros não vão em anexo: estão num bucket privado e só o painel os
  * abre. Vai a lista, para se saber que existem.
+ *
+ * Sai pelo SMTP do e-mail do domínio, na Hostinger, e não por um serviço de
+ * envio à parte: a caixa já existe, o SPF do domínio já aponta para lá — é o
+ * que dá ao e-mail a melhor hipótese de não cair no spam — e nada do que o
+ * visitante escreve sai da União Europeia.
  */
 
 /** Caixa interna da equipa. Não é a morada pública — essa é a do siteConfig. */
@@ -27,8 +33,11 @@ const ASSUNTO: Record<SubmissionKind, string> = {
   contacto: 'Contacto pelo site',
 }
 
-/** Tem de ser um domínio verificado na Resend, senão a API recusa. */
-const REMETENTE = 'Site Luxury Objective <formularios@luxuryobjective.com>'
+/**
+ * A caixa que envia. Tem de ser a mesma que autentica no SMTP: a Hostinger
+ * recusa um remetente diferente de quem entrou na sessão.
+ */
+const REMETENTE = process.env.SMTP_USER ?? 'geral@luxuryobjective.com'
 
 /**
  * As etiquetas que o visitante viu, para o e-mail falar a mesma língua do
@@ -77,11 +86,11 @@ export function emailDeSubmissao(
   ].join('\n')
 
   return {
-    from: REMETENTE,
-    to: [DESTINO],
+    from: `Site Luxury Objective <${REMETENTE}>`,
+    to: DESTINO,
     subject: `${nome} — ${ASSUNTO[kind]}`,
     text: corpo,
-    ...(email ? { reply_to: email } : {}),
+    ...(email ? { replyTo: email } : {}),
   }
 }
 
@@ -94,21 +103,20 @@ export async function notificarSubmissao(
   payload: Record<string, unknown>,
   ficheiros: SubmissionFile[],
 ) {
-  const chave = process.env.RESEND_API_KEY
-  if (!chave) {
-    console.warn('[forms] RESEND_API_KEY não definida — submissão gravada, sem aviso por e-mail')
+  const palavraPasse = process.env.SMTP_PASSWORD
+  if (!palavraPasse) {
+    console.warn('[forms] SMTP_PASSWORD não definida — submissão gravada, sem aviso por e-mail')
     return
   }
 
   try {
-    const resposta = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${chave}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(emailDeSubmissao(kind, payload, ficheiros)),
+    const transporte = nodemailer.createTransport({
+      host: process.env.SMTP_HOST ?? 'smtp.hostinger.com',
+      port: 465,
+      secure: true,
+      auth: { user: REMETENTE, pass: palavraPasse },
     })
-    if (!resposta.ok) {
-      console.error('[forms] e-mail de aviso recusado', resposta.status, await resposta.text())
-    }
+    await transporte.sendMail(emailDeSubmissao(kind, payload, ficheiros))
   } catch (erro) {
     console.error('[forms] e-mail de aviso falhou', erro)
   }

@@ -48,8 +48,9 @@ SUPABASE_SERVICE_ROLE_KEY=...   # só no servidor, nunca no cliente
 
 RATE_LIMIT_SALT=...             # string longa e aleatória
 
-# Sem esta, os formulários gravam mas ninguém é avisado por e-mail.
-RESEND_API_KEY=...
+# Palavra-passe da caixa geral@luxuryobjective.com. Sem esta, os formulários
+# gravam mas ninguém é avisado por e-mail.
+SMTP_PASSWORD=...
 ```
 
 ## 4. Build

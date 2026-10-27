@@ -80,12 +80,11 @@ export const privacidade: LegalDocument = {
       title: 'Quem tem acesso',
       paragraphs: [
         'A equipa da Luxury Objective, e apenas na medida do necessário para responder ao seu pedido. Não vendemos, não alugamos e não cedemos dados pessoais a terceiros para fins comerciais.',
-        'Quatro empresas tratam dados por nossa conta, com contrato e apenas segundo as nossas instruções:',
+        'Três empresas tratam dados por nossa conta, com contrato e apenas segundo as nossas instruções:',
       ],
       list: [
         'Supabase, Inc. — base de dados e armazenamento dos ficheiros que anexar.',
-        'Hostinger International Ltd. — alojamento do site.',
-        'Resend, Inc. — entrega do e-mail que avisa a equipa de cada formulário submetido.',
+        'Hostinger International Ltd. — alojamento do site e do correio eletrónico da empresa.',
         'ImageKit — entrega das fotografias das páginas. Não recebe dados de formulários.',
       ],
     },
@@ -94,7 +93,7 @@ export const privacidade: LegalDocument = {
       paragraphs: [
         'A base de dados e os ficheiros estão alojados em servidores no Canadá.',
         'A Comissão Europeia reconheceu que o Canadá assegura um nível adequado de proteção de dados pessoais, pela Decisão 2002/2/CE, pelo que esta transferência não depende de garantias adicionais.',
-        'O e-mail que nos avisa de cada formulário é entregue pela Resend, nos Estados Unidos, ao abrigo das cláusulas contratuais-tipo da Comissão Europeia previstas no contrato de subcontratação. Esse e-mail leva o conteúdo do formulário; os ficheiros que anexar não saem do Canadá. Os restantes tratamentos decorrem na União Europeia.',
+        'O e-mail que nos avisa de cada formulário é enviado e recebido no correio eletrónico do nosso próprio domínio, alojado na União Europeia. Os restantes tratamentos decorrem igualmente na União Europeia.'
       ],
     },
     {

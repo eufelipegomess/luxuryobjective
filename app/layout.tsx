@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Fahkwang, Jost } from 'next/font/google'
+import { MetaPixel } from '@/components/analytics/MetaPixel'
 import { MotionFlags } from '@/components/motion/MotionFlags'
 import { siteConfig } from '@/lib/config'
 import './globals.css'
@@ -100,6 +101,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <MotionFlags />
         {children}
+        <MetaPixel />
       </body>
     </html>
   )

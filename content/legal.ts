@@ -10,7 +10,7 @@
  * A data é a da última revisão e aparece no fim de cada documento.
  */
 
-export const legalUpdatedAt = '25 de setembro de 2026'
+export const legalUpdatedAt = '27 de outubro de 2026'
 
 export type LegalSection = {
   title: string
@@ -55,7 +55,16 @@ export const privacidade: LegalDocument = {
       paragraphs: [
         'Quando um formulário é submetido, guardamos também o identificador do seu navegador e uma versão cifrada e irreversível do seu endereço IP. Não guardamos o endereço IP em si e não é possível reconstruí-lo a partir do que guardamos.',
         'Servem um único fim: impedir que o mesmo remetente submeta centenas de formulários seguidos. Não são usados para o identificar, para publicidade, nem para medir o seu comportamento no site.',
-        'Este site não tem ferramentas de estatísticas, não tem pixéis de publicidade e não partilha nada com redes sociais. A navegação nas páginas não é registada.',
+        'Além disso, o site usa o pixel da Meta, descrito na secção seguinte. Não há ferramentas de estatísticas próprias nem botões de redes sociais que registem a sua navegação.',
+      ],
+    },
+    {
+      title: 'Meta Pixel',
+      paragraphs: [
+        'Este site tem instalado o pixel da Meta (identificador 777124824238529), a ferramenta que permite ao Facebook e ao Instagram medir o resultado dos anúncios da Luxury Objective. Carrega quando abre o site e regista a visita.',
+        'A Meta recebe o endereço das páginas que visita, o seu endereço IP, dados do navegador e um identificador guardado no seu dispositivo. Se tiver conta no Facebook ou no Instagram, a Meta consegue ligar essa visita à sua conta. Nós não recebemos a identidade de ninguém: vemos apenas totais.',
+        'A Meta Platforms Ireland Limited é a responsável por este tratamento em conjunto connosco e pode transferir dados para os Estados Unidos ao abrigo do Quadro de Privacidade de Dados UE-EUA. O que a Meta faz com eles está na política de dados da própria Meta.',
+        'Para o recusar: bloqueie os cookies deste site no seu navegador, ou use as definições de anúncios da sua conta Meta. Nada no site deixa de funcionar por causa disso.',
       ],
     },
     {
@@ -135,10 +144,10 @@ export const cookies: LegalDocument = {
     'Cookies são ficheiros pequenos que um site guarda no seu dispositivo para se lembrar de alguma coisa entre páginas. Este site usa muito poucos, e nenhum no lado público — por isso também não lhe aparece aquela janela a pedir autorização.',
   sections: [
     {
-      title: 'No site público, nenhum',
+      title: 'No site público, os do pixel da Meta',
       paragraphs: [
-        'Navegar pelas páginas deste site — início, empresa, serviços, projetos, contacto — não guarda cookies no seu dispositivo.',
-        'Não há ferramentas de estatísticas, não há pixéis de publicidade, não há botões de redes sociais que sigam a sua navegação. Preencher um formulário também não guarda cookies: a mensagem é enviada e fica na nossa base de dados, como explicado na Política de Privacidade.',
+        'O site tem instalado o pixel da Meta, que mede o resultado dos anúncios da Luxury Objective no Facebook e no Instagram. É ele que guarda cookies no seu dispositivo, com nomes começados por _fb, para reconhecer o navegador entre visitas.',
+        'Fora isso, navegar pelas páginas não guarda nada. Não há ferramentas de estatísticas próprias nem botões de redes sociais. Preencher um formulário também não guarda cookies: a mensagem é enviada e fica na nossa base de dados, como explicado na Política de Privacidade.',
       ],
     },
     {
@@ -149,10 +158,10 @@ export const cookies: LegalDocument = {
       ],
     },
     {
-      title: 'Porque não lhe pedimos autorização',
+      title: 'Como recusar',
       paragraphs: [
-        'A lei exige consentimento para cookies que não sejam indispensáveis ao funcionamento do serviço pedido — é o que diz o artigo 5.º da Lei n.º 41/2004. Como o site público não usa nenhum, e os da área reservada são estritamente necessários a quem lá entra, não há nada a consentir.',
-        'Se um dia passarmos a usar estatísticas ou outra ferramenta que o exija, passará a existir um pedido de autorização claro, que poderá recusar sem perder acesso ao site.',
+        'Os cookies do pixel da Meta não são indispensáveis ao funcionamento do site: pode bloqueá-los sem perder acesso a nada. Faça-o nas definições do seu navegador, ou nas definições de anúncios da sua conta Meta.',
+        'Os da área reservada são de outra natureza — sem eles não há sessão iniciada, e por isso não são recusáveis para quem precisa de entrar no painel.',
       ],
     },
     {

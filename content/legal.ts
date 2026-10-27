@@ -55,6 +55,7 @@ export const privacidade: LegalDocument = {
       paragraphs: [
         'Quando um formulário é submetido, guardamos também o identificador do seu navegador e uma versão cifrada e irreversível do seu endereço IP. Não guardamos o endereço IP em si e não é possível reconstruí-lo a partir do que guardamos.',
         'Servem um único fim: impedir que o mesmo remetente submeta centenas de formulários seguidos. Não são usados para o identificar, para publicidade, nem para medir o seu comportamento no site.',
+        'Ao mesmo tempo, o conteúdo do formulário segue por e-mail para a caixa de correio da equipa, para que o seu pedido não fique à espera de alguém abrir o painel.',
         'Além disso, o site usa o pixel da Meta, descrito na secção seguinte. Não há ferramentas de estatísticas próprias nem botões de redes sociais que registem a sua navegação.',
       ],
     },
@@ -79,11 +80,12 @@ export const privacidade: LegalDocument = {
       title: 'Quem tem acesso',
       paragraphs: [
         'A equipa da Luxury Objective, e apenas na medida do necessário para responder ao seu pedido. Não vendemos, não alugamos e não cedemos dados pessoais a terceiros para fins comerciais.',
-        'Três empresas tratam dados por nossa conta, com contrato e apenas segundo as nossas instruções:',
+        'Quatro empresas tratam dados por nossa conta, com contrato e apenas segundo as nossas instruções:',
       ],
       list: [
         'Supabase, Inc. — base de dados e armazenamento dos ficheiros que anexar.',
         'Hostinger International Ltd. — alojamento do site.',
+        'Resend, Inc. — entrega do e-mail que avisa a equipa de cada formulário submetido.',
         'ImageKit — entrega das fotografias das páginas. Não recebe dados de formulários.',
       ],
     },
@@ -91,7 +93,8 @@ export const privacidade: LegalDocument = {
       title: 'Onde ficam guardados',
       paragraphs: [
         'A base de dados e os ficheiros estão alojados em servidores no Canadá.',
-        'A Comissão Europeia reconheceu que o Canadá assegura um nível adequado de proteção de dados pessoais, pela Decisão 2002/2/CE, pelo que esta transferência não depende de garantias adicionais. Os restantes tratamentos decorrem na União Europeia.',
+        'A Comissão Europeia reconheceu que o Canadá assegura um nível adequado de proteção de dados pessoais, pela Decisão 2002/2/CE, pelo que esta transferência não depende de garantias adicionais.',
+        'O e-mail que nos avisa de cada formulário é entregue pela Resend, nos Estados Unidos, ao abrigo das cláusulas contratuais-tipo da Comissão Europeia previstas no contrato de subcontratação. Esse e-mail leva o conteúdo do formulário; os ficheiros que anexar não saem do Canadá. Os restantes tratamentos decorrem na União Europeia.',
       ],
     },
     {

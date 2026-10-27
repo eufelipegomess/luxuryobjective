@@ -34,6 +34,7 @@ O site fica em <http://localhost:3000>.
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | para o painel | chave pública |
 | `SUPABASE_SERVICE_ROLE_KEY` | para os formulários | **só no servidor**, ignora RLS |
 | `RATE_LIMIT_SALT` | recomendada | sal do hash de IP no rate limiting |
+| `RESEND_API_KEY` | para o aviso por e-mail | avisa a equipa de cada formulário submetido |
 | `E2E_ADMIN_EMAIL` / `E2E_ADMIN_PASSWORD` | opcional | testes E2E do painel |
 
 ### Sem Supabase configurado

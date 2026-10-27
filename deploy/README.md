@@ -47,6 +47,9 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=...
 SUPABASE_SERVICE_ROLE_KEY=...   # só no servidor, nunca no cliente
 
 RATE_LIMIT_SALT=...             # string longa e aleatória
+
+# Sem esta, os formulários gravam mas ninguém é avisado por e-mail.
+RESEND_API_KEY=...
 ```
 
 ## 4. Build

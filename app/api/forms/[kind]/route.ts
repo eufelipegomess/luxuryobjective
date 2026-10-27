@@ -3,7 +3,9 @@ import { createSupabaseAdminClient } from '@/lib/supabase/server'
 import { isSupabaseConfigured } from '@/lib/supabase/env'
 import { schemaByKind, submissionKindSchema } from '@/lib/validations/forms'
 import { getClientIp, hashIp, pruneRateLimit, rateLimit } from '@/lib/server/request'
+import { notificarSubmissao } from '@/lib/server/notify'
 import { ui } from '@/content/pt-PT'
+import type { SubmissionFile } from '@/lib/types'
 
 export const runtime = 'nodejs'
 
@@ -12,8 +14,8 @@ export const runtime = 'nodejs'
  *
  * O mesmo schema Zod que validou no browser volta a validar aqui — um pedido
  * forjado não passa. Os ficheiros já foram para o bucket privado por
- * /api/uploads; aqui viajam só os metadados. Nada é enviado por e-mail com
- * anexos.
+ * /api/uploads; aqui viajam só os metadados — o e-mail de aviso leva a lista
+ * de ficheiros, nunca os ficheiros.
  */
 export async function POST(request: Request, context: { params: Promise<{ kind: string }> }) {
   pruneRateLimit()
@@ -61,11 +63,12 @@ export async function POST(request: Request, context: { params: Promise<{ kind: 
   }
 
   const { ficheiros, ...rest } = payload as { ficheiros?: unknown }
+  const anexos = Array.isArray(ficheiros) ? (ficheiros as SubmissionFile[]) : []
   const supabase = createSupabaseAdminClient()
   const { error } = await supabase.from('form_submissions').insert({
     kind,
     payload: rest as Record<string, unknown>,
-    files: Array.isArray(ficheiros) ? (ficheiros as never) : [],
+    files: anexos as never,
     ip_hash: ipHash,
     user_agent: request.headers.get('user-agent')?.slice(0, 400) ?? null,
   })
@@ -74,6 +77,10 @@ export async function POST(request: Request, context: { params: Promise<{ kind: 
     console.error('[forms] falha ao gravar', error.message)
     return NextResponse.json({ error: ui.erroEnvio }, { status: 500 })
   }
+
+  // Depois da gravação e esperado: numa serverless function o que corre solto
+  // depois da resposta é cortado a meio.
+  await notificarSubmissao(kind, rest as Record<string, unknown>, anexos)
 
   return NextResponse.json({ ok: true })
 }
